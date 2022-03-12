@@ -1,8 +1,9 @@
 sizikov.space {
-    redirect https://qwork.sizikov.space
+    redir https://qwork.sizikov.space
 }
 
-qwork.sizikov.space/api {
+route qwork.sizikov.space/api/* {
+    uri strip_prefix /api
     reverse_proxy backend:8000
 }
 

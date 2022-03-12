@@ -1,4 +1,2 @@
-#git pull origin master
-#docker-compose up -d --build
-echo "Hello, world!"
-whoami
+docker-compose down
+docker-compose up --build -d

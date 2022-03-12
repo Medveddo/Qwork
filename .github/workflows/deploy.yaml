@@ -2,9 +2,9 @@ name: Deploy to server
 
 on:
   push:
-    branches: [ master ]
+    branches: [ production ]
   pull_request:
-    branches: [ master ]
+    branches: [ production ]
 
 jobs:
   deploy:
@@ -16,4 +16,7 @@ jobs:
         host: ${{ secrets.SERVER_SSH_HOST }}
         username: ${{ secrets.SERVER_SSH_USERNAME }}
         password: ${{ secrets.SERVER_SSH_PASSWORD }}
-        script: ./ci-cd/deploy.sh
+        script: |
+          cd /usr/src/app
+          git pull origin production
+          ./ci-cd/deploy.sh

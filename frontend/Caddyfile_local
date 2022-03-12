@@ -2,5 +2,3 @@
     root * /srv
     file_server
 }
-
-
