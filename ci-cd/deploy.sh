@@ -1,2 +1,1 @@
-docker-compose build
-docker-compose restart backend frontend
+docker-compose up --build -d

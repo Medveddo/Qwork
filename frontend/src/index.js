@@ -12,8 +12,8 @@ var server_time = "server_time";
 
 // var backend_url = "localhost:8000/api";
 var backend_url = "qwork.sizikov.space/api";
-var now_url = "http://" + backend_url + "/now"; // http or https ? locally works only with http
-var process_text_url = "http://" + backend_url + "/process_text";
+var now_url = "https://" + backend_url + "/now"; // https in prod, locally works only with http
+var process_text_url = "https://" + backend_url + "/process_text";
 
 var is_reloading = false
 
