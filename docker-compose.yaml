@@ -17,7 +17,7 @@ services:
       - "8001:8000"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/test_db
-    command: bash -c "./scripts/wait-for-it.sh db:5432 -t 15 && ./scripts/run.sh"
+    command: bash -c "./scripts/run.sh"
     depends_on:
       - db
 

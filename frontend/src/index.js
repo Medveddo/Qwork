@@ -54,7 +54,7 @@ var MainComponent = {
         is_reloading ? "Reloading" : "Not reloading"
       ),
       m("p", server_time),
-      m("h1.centered", title_text + backend_url),
+      m("h1.centered", title_text),
       m(
         "div.centered",
         m(
