@@ -1,0 +1,8 @@
+sizikov.space {
+    redirect https://qwork.sizikov.space
+}
+
+qwork.sizikov.space {
+    root * /srv
+    file_server
+}

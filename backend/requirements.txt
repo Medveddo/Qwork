@@ -1,0 +1,11 @@
+alembic
+black
+fastapi
+flake8
+jinja2
+loguru
+natasha
+psycopg2-binary
+python-dotenv
+sqlalchemy
+uvicorn
