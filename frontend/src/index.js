@@ -4,7 +4,7 @@ var title_text = "Text processing system";
 
 var user_input;
 
-var response_from_server;
+var response_from_server = undefined;
 
 var backend_url = window.location.href;
 
@@ -41,7 +41,7 @@ var process_text = function() {
     body: { text: user_input },
     // headers: { "Access-Control-Allow-Origin": "*" },
   }).then(function(data) {
-    response_from_server = data.response;
+    response_from_server = data;
   });
 };
 
@@ -77,8 +77,13 @@ var MainComponent = {
           "Check text"
         )
       ),
-      response_from_server ? m("h3.centered", "response_from_server") : null,
-      response_from_server ? m("h4.centered", response_from_server) : null,
+      response_from_server ? m("h3.centered", "Response from server") : null,
+      response_from_server ? m("div.centered", [
+        m("h4.centered", "Corresponding: " + response_from_server.is_correspond),
+        m("h4.centered", "Temperature: " + response_from_server.temperature),
+        m("h4.centered", "Systole pressure: " + response_from_server.systole_pressure),
+        m("h4.centered", "Diastole pressure: " + response_from_server.diastole_pressure)
+      ]) : null,
     ];
   },
 };

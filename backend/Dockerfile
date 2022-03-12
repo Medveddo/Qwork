@@ -7,11 +7,11 @@ COPY ./requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
 COPY ./scripts /app/scripts
-COPY ./app /app/app
-COPY ./alembic /app/alembic
-COPY ./alembic.ini /app/alembic.ini
-
 RUN chmod +x /app/scripts/wait-for-it.sh && \
     chmod +x /app/scripts/run.sh
+
+COPY ./alembic /app/alembic
+COPY ./alembic.ini /app/alembic.ini
+COPY ./app /app/app
     
 CMD ["scripts/run.sh"]

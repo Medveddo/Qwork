@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-
+from loguru import logger
 origins = [
     "*",
 ]
@@ -70,18 +70,24 @@ async def process_text(request: Request):
     result = verify_temp_and_blood_pressure(text_input["text"])
     print(result.is_correspond)
 
+    result_dict = {
+        "is_correspond": "❌",
+        "temperature": "",
+        "systole_pressure": "",
+        "diastole_pressure": "",
+    }
+
     if result.is_correspond:
-        return {"response": "Текст соответствует требованиям"}
+        result_dict.update({"is_correspond": "✅"})
+    if result.temperature:
+        result_dict.update({"temperature": result.temperature})
+    if result.systole_pressure:
+        result_dict.update({"systole_pressure": result.systole_pressure})
+    if result.diastole_pressure:
+        result_dict.update({"diastole_pressure": result.diastole_pressure})
 
-    response = "Текст не соответствует требованиям:"
-    if not result.temperature:
-        response += "\n - Отсутствует температура пациента"
-    if not result.systole_pressure:
-        response += "\n - Отсутствует систолическое давление"
-    if not result.diastole_pressure:
-        response += "\n - Отсутствует диастолическое давление"
-
-    return {"response": response}
+    logger.debug(result_dict)
+    return result_dict
 
 
 @app.post("/users/", response_model=schemas.User)
