@@ -10,9 +10,10 @@ var backend_url = window.location.href;
 
 var server_time = "server_time";
 
+// var backend_url = "localhost:8000/api";
 var backend_url = "qwork.sizikov.space/api";
-var now_url = "https://" + backend_url + "/now";
-var process_text_url = "https://" + backend_url + "/process_text";
+var now_url = "http://" + backend_url + "/now"; // http or https ? locally works only with http
+var process_text_url = "http://" + backend_url + "/process_text";
 
 var is_reloading = false
 
@@ -38,7 +39,7 @@ var process_text = function() {
     method: "POST",
     url: process_text_url,
     body: { text: user_input },
-    // headers: { "Access-Control-Allow-Origin": "http://localhost:8000" },
+    // headers: { "Access-Control-Allow-Origin": "*" },
   }).then(function(data) {
     response_from_server = data.response;
   });

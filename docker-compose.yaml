@@ -1,4 +1,5 @@
 version: "3.3"
+# version: "3.9" # local
 services:
   db:
     image: postgres:alpine
@@ -24,6 +25,7 @@ services:
     build:
       context: ./frontend
     ports:
+      # - "8000:80" # local
       - "80:80"
       - "443:443"
     volumes:
