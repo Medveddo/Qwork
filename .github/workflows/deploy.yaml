@@ -19,4 +19,5 @@ jobs:
         script: |
           cd /usr/src/app
           git pull origin production
+          chmod +x ./ci-cd/deploy.sh
           ./ci-cd/deploy.sh
