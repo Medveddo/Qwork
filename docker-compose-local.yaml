@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:alpine
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=test_db
+
+  backend:
+    image: qwork-backend
+    build:
+      context: ./backend
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/test_db
+    command: bash -c "./scripts/run.sh"
+    depends_on:
+      - db
+
+  frontend:
+    image: qwork-frontend
+    build:
+      context: ./frontend
+    ports:
+      - "8000:80"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    
+
+volumes:
+  caddy_data:
+  caddy_config:
+  postgres-db:
