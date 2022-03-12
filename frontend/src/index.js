@@ -10,10 +10,9 @@ var backend_url = window.location.href;
 
 var server_time = "server_time";
 
-// backend_url = backend_url.includes("index") ? "localhost:8000" : backend_url;
-var backend_url = "localhost:8001";
-var now_url = "http://" + backend_url + "/now";
-var process_text_url = "http://" + backend_url + "/process_text";
+var backend_url = "qwork.sizikov.space/api";
+var now_url = "https://" + backend_url + "/now";
+var process_text_url = "https://" + backend_url + "/process_text";
 
 var is_reloading = false
 

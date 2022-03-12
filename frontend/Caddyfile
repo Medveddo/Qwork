@@ -1,6 +1,12 @@
-:80 {
+sizikov.space {
+    redirect https://qwork.sizikov.space
+}
+
+qwork.sizikov.space/api {
+    reverse_proxy backend:8000
+}
+
+qwork.sizikov.space {
     root * /srv
     file_server
 }
-
-

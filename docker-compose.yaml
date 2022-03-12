@@ -13,8 +13,6 @@ services:
     image: qwork-backend
     build:
       context: ./backend
-    ports:
-      - "8001:8000"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/test_db
     command: bash -c "./scripts/run.sh"
@@ -26,7 +24,8 @@ services:
     build:
       context: ./frontend
     ports:
-      - "8000:80"
+      - "80:80"
+      - "443:443"
     volumes:
       - caddy_data:/data
       - caddy_config:/config
