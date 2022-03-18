@@ -18,6 +18,6 @@ jobs:
         password: ${{ secrets.SERVER_SSH_PASSWORD }}
         script: |
           cd /usr/src/app
-          git pull origin production
+          git pull origin master
           chmod +x ./ci-cd/deploy.sh
           ./ci-cd/deploy.sh
