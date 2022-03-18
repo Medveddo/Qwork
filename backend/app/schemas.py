@@ -3,35 +3,19 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class ItemBase(BaseModel):
-    title: str
-    description: Optional[str] = None
-
-
-class ItemCreate(ItemBase):
-    pass
-
-
-class Item(ItemBase):
-    id: int
-    owner_id: int
+class TextInput(BaseModel):
+    text: str
 
     class Config:
-        orm_mode = True
+        schema_extra = {
+            "example": {
+                "text": "Температура 37.9. Давление высокое - 120 на 80."
+            }
+        }
 
-
-class UserBase(BaseModel):
-    email: str
-
-
-class UserCreate(UserBase):
-    password: str
-
-
-class User(UserBase):
-    id: int
-    is_active: bool
-    items: list[Item] = []
-
-    class Config:
-        orm_mode = True
+class TextProcessResult(BaseModel):
+    text: Optional[str]
+    is_corresponding: bool
+    temperature: Optional[float]
+    systole_pressure: Optional[int]
+    diastole_pressure: Optional[int]

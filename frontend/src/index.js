@@ -2,7 +2,7 @@ var m = require("mithril");
 
 var title_text = "Text processing system";
 
-var user_input;
+var user_input = "Температура 37.9. Давление высокое - 120 на 80.";
 
 var response_from_server = undefined;
 
@@ -14,6 +14,7 @@ var server_time = "server_time";
 var backend_url = "qwork.sizikov.space/api";
 var now_url = "https://" + backend_url + "/now"; // https in prod, locally works only with http
 var process_text_url = "https://" + backend_url + "/process_text";
+var get_history_url = "https://" + backend_url + "/history";
 
 var is_reloading = false
 
@@ -48,12 +49,15 @@ var process_text = function() {
 var MainComponent = {
   view: function() {
     return [
-      m(
-        "button",
-        { onclick: function() { is_reloading = !is_reloading; } },
-        is_reloading ? "Reloading" : "Not reloading"
-      ),
-      m("p", server_time),
+      m("a.centered", {
+        href: "#!/history"
+      }, "History"),
+      // m(
+      //   "button",
+      //   { onclick: function() { is_reloading = !is_reloading; } },
+      //   is_reloading ? "Reloading" : "Not reloading"
+      // ),
+      // m("p", server_time),
       m("h1.centered", title_text),
       m(
         "div.centered",
@@ -64,7 +68,8 @@ var MainComponent = {
               user_input = e.target.value;
             },
             value: user_input,
-          }
+          },
+          user_input,
         )
       ),
       m(
@@ -88,4 +93,39 @@ var MainComponent = {
   },
 };
 
-m.mount(document.body, MainComponent);
+var history = []
+
+var load_history = function() {
+  console.log("Sending request to:" + get_history_url);
+  m.request({
+    method: "GET",
+    url: get_history_url,
+  }).then(function(data) {
+    console.log(data);
+    history = data;
+  });
+};
+
+var TextProcessHistory = {
+  view: function(){
+    return [
+      m(
+        "div.centered",
+        m(
+          "button.centered",
+          {
+            onclick: load_history,
+          },
+          "Load history"
+        )
+      ),
+      history ? m("div", "Текст | Соответствие | Температура | Давление систол | Давление диастол") : "История отсутствует",
+      m("div", history.map(function(result) { return m("p", result.text + " | " + (result.is_corresponding ? "✅" : "❌") + " " + result.temperature + " " + result.systole_pressure + " " + result.diastole_pressure)}))
+    ]
+  }
+}
+
+m.route(document.body, "/history", {
+  "/": MainComponent,
+  "/history": TextProcessHistory,
+})

@@ -8,14 +8,14 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=test_db
+      - POSTGRES_DB=qwork
 
   backend:
     image: qwork-backend
     build:
       context: ./backend
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/test_db
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/qwork
     command: bash -c "./scripts/run.sh"
     depends_on:
       - db

@@ -7,6 +7,14 @@ route qwork.sizikov.space/api/* {
     reverse_proxy backend:8000
 }
 
+route qwork.sizikov.space/docs {
+    reverse_proxy backend:8000
+}
+
+route qwork.sizikov.space/openapi.json {
+    reverse_proxy backend:8000
+}
+
 qwork.sizikov.space {
     root * /srv
     file_server

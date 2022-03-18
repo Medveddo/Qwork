@@ -21,4 +21,5 @@ Also want deploy to Kubernetes
 
 1. Copy data from Caddyfile_local to Caddyfile
 2. Set `var backend_url = "localhost:8000/api";` in frontend/index.js file
+2.1 replace all https with http
 3. Expose only :80 port of frontend container to any of your machine ports (for me 80:80 does not works on Debian)

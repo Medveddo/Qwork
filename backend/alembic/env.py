@@ -34,7 +34,7 @@ fileConfig(config.config_file_name)
 
 from app.database import engine, Base
 
-from app.models import User, Item
+from app.models import TextProcessResult
 
 target_metadata = Base.metadata
 

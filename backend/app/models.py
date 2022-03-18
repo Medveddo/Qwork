@@ -1,26 +1,14 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Column, Integer, Text, Float
 
 from .database import Base
 
 
-class User(Base):
-    __tablename__ = "users"
+class TextProcessResult(Base):
+    __tablename__ = "text_process_result"
 
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    is_active = Column(Boolean, default=True)
-
-    items = relationship("Item", back_populates="owner")
-
-
-class Item(Base):
-    __tablename__ = "items"
-
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
-    owner_id = Column(Integer, ForeignKey("users.id"))
-
-    owner = relationship("User", back_populates="items")
+    text = Column(Text)
+    is_corresponding = Column(Boolean, default=False)
+    temperature = Column(Float, nullable=True)
+    systole_pressure = Column(Integer, nullable=True)
+    diastole_pressure = Column(Integer, nullable=True)

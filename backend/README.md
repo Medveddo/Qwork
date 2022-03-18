@@ -23,6 +23,8 @@ Also want deploy to Kubernetes
 
 ## Alembic
 
+`alembic revision --autogenerate -m 'initial'`
+
 `alembic upgrade head`
 
 `alembic downgrade base`
