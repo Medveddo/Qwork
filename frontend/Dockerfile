@@ -1,15 +1,12 @@
 ### STAGE 1: Build ###
-FROM node:12.7-alpine AS build
+FROM node:14.13-alpine AS build
 WORKDIR /usr/src/app
 COPY package.json ./
 RUN npm install
-COPY ./src /usr/src/app/src
-RUN npm run-script build
+COPY . .
+RUN npm run build
 
 ### STAGE 2: Run ###
 FROM caddy:2.4.6
 COPY ./Caddyfile /etc/caddy/Caddyfile
-COPY ./index.html /srv/index.html
-COPY ./styles.css /srv/styles.css
-COPY ./favicon.ico /srv/favicon.ico
-COPY --from=build /usr/src/app/bin /srv/bin
+COPY --from=build /usr/src/app/build /srv

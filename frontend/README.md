@@ -1,11 +1,28 @@
-# kekw
+# Qwork frontend
 
-`npm init -y`
+```bash
+npm run dev
 
-`npm i mithril --save`
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
 
-`npm i webpack@4.19.1 webpack-cli@3.3.12 --save-dev`
+## Building
 
-`npm start` - with hot reload
+To create a production version of your app:
 
-`npm run-script build` - to final statics
+```bash
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+## Env file
+
+[Guide](https://github.com/motdotla/dotenv)
+
+```.env
+API_URL=http://localhost:8000/api/
+API_KEY=123
+ENVIRONMENT=LOCAL
+```
