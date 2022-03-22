@@ -1,6 +1,7 @@
 <script>
+	const backend_host = import.meta.env.VITE_API_URL
 	const getHistory = async function () {
-		const url = `http://localhost:8001/history`;
+		const url = backend_host + `history`;
 		const res = await fetch(url);
 		const data = await res.json();
 		const history = data.map((run, i) => {
