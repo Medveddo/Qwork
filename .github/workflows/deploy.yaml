@@ -19,6 +19,6 @@ jobs:
         script: |
           cd /usr/src/app
           git pull origin master
-          echo -e "VITE_ENVIRONMENT=${{ secrets.VITE_ENVIRONMENT }}\nVITE_API_URL=${{ secrets.BACKEND_API_URL }}" > frontend/.env
+          echo -e "VITE_ENVIRONMENT=${{ secrets.ENVIRONMENT }}\nVITE_API_URL=${{ secrets.BACKEND_API_URL }}" > frontend/.env
           chmod +x ./ci-cd/deploy.sh
           ./ci-cd/deploy.sh
