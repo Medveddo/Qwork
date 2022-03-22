@@ -2,16 +2,13 @@
 	import { onMount, onDestroy } from "svelte";
 	import TextInfo from '../components/textInfo.svelte'
 
-	// import dotenv from 'dotenv'
-
-	// dotenv.config()
-
-	// export const env = process.env
+	const environment = import.meta.env.VITE_ENVIRONMENT
+	const backend_host = import.meta.env.VITE_API_URL
+	console.log(environment);
+	console.log(backend_host);
 	
 	let time = '';
 	let text_to_process = 'Температура 37.9. Давление высокое - 120 на 80.';
-	// const backend_host = env.API_URL
-	const backend_host = "http://localhost:8000/api/"
 	let text_info_result = null;
 	
 	async function fetchData() {
@@ -54,7 +51,7 @@
 </script>
 
 <p class="text-center">Time from server: {time}</p>
-<h1 class="uppercase text-2xl text-center">Text processing system</h1>
+<h1 class="uppercase text-2xl text-center">Text processing system {environment}</h1>
 <div class="text-center">
 	<button class="border-4 border-red-300 bg-green-200" on:click={fetchData}>Refresh time</button>
 </div>

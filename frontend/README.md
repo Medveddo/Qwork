@@ -22,7 +22,6 @@ You can preview the production build with `npm run preview`.
 [Guide](https://github.com/motdotla/dotenv)
 
 ```.env
-API_URL=http://localhost:8000/api/
-API_KEY=123
-ENVIRONMENT=LOCAL
+VITE_ENVIRONMENT=LOCAL
+VITE_API_URL=http://localhost:8000/api/
 ```
