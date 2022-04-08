@@ -1,6 +1,8 @@
 # Text analysis system (Bachelor's qualification work in NSTU)
 
-## Local .env file
+## Local development
+
+1. Create .env file with variables:
 
 ```dotenv
 DATABASE_URL=postgresql://postgres:postgres@db:5432/qwork
@@ -12,7 +14,13 @@ VITE_API_URL=http://localhost:8000/api/
 VITE_ENVIRONMENT=local
 ```
 
-`docker-compose --file docker-compose.local.yaml up --build
+2. Copy data from Caddyfile_local to Caddyfile
+
+3. Run
+
+```shell
+docker-compose --file docker-compose.local.yaml up --build
+```
 
 ## Description
 
@@ -30,10 +38,3 @@ Expected and stack that I want to use in this project:
 - Web-server: Caddy/Nginx
 
 Also want deploy to Kubernetes
-
-## Local start
-
-1. Copy data from Caddyfile_local to Caddyfile
-2. Set `var backend_url = "localhost:8000/api";` in frontend/index.js file
-2.1 replace all https with http
-3. Expose only :80 port of frontend container to any of your machine ports (for me 80:80 does not works on Debian)
