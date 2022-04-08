@@ -1,5 +1,6 @@
-version: "3.3"
+# docker-compose --file docker-compose.local.yaml up --build
 
+version: "3.9"
 services:
   db:
     image: postgres:alpine
@@ -21,6 +22,8 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL:?err}
       - DRAMATIQ_BROKER_URL=${DRAMATIQ_BROKER_URL:?err}
+    ports:
+      - "8001:8000"
     command: bash -c "./scripts/run.sh"
     depends_on:
       - db
@@ -33,6 +36,8 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL:?err}
       - DRAMATIQ_BROKER_URL=${DRAMATIQ_BROKER_URL:?err}
+    ports:
+      - "9191:9191"
     command: >
       sh -c "./scripts/run_dramatiq.sh"
     depends_on:
@@ -60,8 +65,7 @@ services:
         - VITE_API_URL=${VITE_API_URL:?err}
         - VITE_ENVIRONMENT=${VITE_ENVIRONMENT:?err}
     ports:
-      - "80:80"
-      - "443:443"
+      - "8000:80"
     volumes:
       - caddy_data:/data
       - caddy_config:/config

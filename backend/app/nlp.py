@@ -1,17 +1,18 @@
+from dataclasses import dataclass
 from typing import List, Optional, Tuple
+
+from loguru import logger
 from natasha import (
-    Segmenter,
+    Doc,
     MorphVocab,
+    NamesExtractor,
     NewsEmbedding,
     NewsMorphTagger,
-    NewsSyntaxParser,
     NewsNERTagger,
-    NamesExtractor,
-    Doc,
+    NewsSyntaxParser,
+    Segmenter,
 )
 from natasha.doc import DocSent, DocToken
-from dataclasses import dataclass
-from loguru import logger
 
 segmenter = Segmenter()
 morph_vocab = MorphVocab()

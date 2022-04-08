@@ -1,5 +1,11 @@
 # Text analysis system (Bachelor's qualification work in NSTU)
 
+`uvicorn app.main:app`
+
+`dramatiq app.dramatiq:DRAMATIQ_REDIS_BROKER app.tasks`
+
+`python -m app.scheduler`
+
 ## Description
 
 Expected and stack that I want to use in this project:

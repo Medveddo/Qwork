@@ -19,6 +19,14 @@ jobs:
         script: |
           cd /usr/src/app
           git pull origin master
-          echo -e "VITE_ENVIRONMENT=${{ secrets.ENVIRONMENT }}\nVITE_API_URL=${{ secrets.BACKEND_API_URL }}" > frontend/.env
+          rm .env
+          touch .env
+          echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
+          echo DRAMATIQ_BROKER_URL=${{ secrets.DRAMATIQ_BROKER_URL }} >> .env
+          echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+          echo VITE_API_URL=${{ secrets.VITE_API_URL }} >> .env
+          echo VITE_ENVIRONMENT=${{ secrets.VITE_ENVIRONMENT }} >> .env
           chmod +x ./ci-cd/deploy.sh
           ./ci-cd/deploy.sh

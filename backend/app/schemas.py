@@ -13,6 +13,7 @@ class TextInput(BaseModel):
             }
         }
 
+
 class TextProcessResult(BaseModel):
     text: Optional[str]
     is_corresponding: bool

@@ -1,5 +1,19 @@
 # Text analysis system (Bachelor's qualification work in NSTU)
 
+## Local .env file
+
+```dotenv
+DATABASE_URL=postgresql://postgres:postgres@db:5432/qwork
+DRAMATIQ_BROKER_URL=redis://redis:6379/0
+POSTGRES_DB=qwork
+POSTGRES_PASSWORD=postgres
+POSTGRES_USER=postgres
+VITE_API_URL=http://localhost:8000/api/
+VITE_ENVIRONMENT=local
+```
+
+`docker-compose --file docker-compose.local.yaml up --build
+
 ## Description
 
 Expected and stack that I want to use in this project:
