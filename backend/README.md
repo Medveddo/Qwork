@@ -2,7 +2,7 @@
 
 `uvicorn app.main:app`
 
-`dramatiq app.dramatiq:DRAMATIQ_REDIS_BROKER app.tasks`
+`dramatiq app.dramatiq:DRAMATIQ_REDIS_BROKER app.tasks -t 1 -p 1`
 
 `python -m app.scheduler`
 

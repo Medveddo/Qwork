@@ -1,4 +1,4 @@
-# docker-compose --file docker-compose.local.yaml up --build
+# docker-compose --file docker-compose.local.yaml up --build -d 
 
 version: "3.9"
 services:
@@ -67,11 +67,34 @@ services:
     ports:
       - "8000:80"
     volumes:
+      - ./frontend/Caddyfile_local:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
 
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    
+  # fluent-bit:
+
+  # zinc
 
 volumes:
   caddy_data:
   caddy_config:
   postgres-db:
+  prometheus-data:
+  grafana-data:

@@ -1,17 +1,31 @@
-sizikov.space {
+handle sizikov.space {
     redir https://qwork.sizikov.space
 }
 
-route qwork.sizikov.space/api/* {
+handle qwork.sizikov.space/api/* {
     uri strip_prefix /api
     reverse_proxy backend:8000
 }
 
-qwork.sizikov.space/openapi.json {
+handle qwork.sizikov.space/openapi.json {
     reverse_proxy backend:8000
 }
 
-qwork.sizikov.space {
+handle qwork.sizikov.space/grafana/* {
+    uri strip_prefix /grafana
+    reverse_proxy grafana:3000
+}
+
+handle qwork.sizikov.space/prometheus/* {
+    uri strip_prefix /prometheus
+    reverse_proxy prometheus:9090
+}
+
+handle qwork.sizikov.space {
     root * /srv
     file_server
+}
+
+handle {
+    respond "Not found" 404
 }

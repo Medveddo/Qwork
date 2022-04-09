@@ -1,16 +1,15 @@
 import datetime
 
+from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
-
-from dotenv import load_dotenv
 from sqlalchemy.orm import Session
+from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 from app import crud, models, schemas
 from app.database import SessionLocal, engine
 from app.nlp import verify_temp_and_blood_pressure
-
 from app.tasks import say_something
 
 load_dotenv()
@@ -32,6 +31,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(PrometheusMiddleware)
+app.add_route("/metrics", handle_metrics)
 
 
 def get_db():

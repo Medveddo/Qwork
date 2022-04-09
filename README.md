@@ -38,3 +38,31 @@ Expected and stack that I want to use in this project:
 - Web-server: Caddy/Nginx
 
 Also want deploy to Kubernetes
+
+## TODO Checklist
+
+✅| Drink some water
+
+⬜️| Patient table in Postgres
+
+⬜️| [Implement HashIDs](https://github.com/davidaurelio/hashids-python)
+
+⬜️| CloudBeaver
+
+⬜️| Periodic processing jobs
+
+⬜️| FluentBit + Zinc
+
+⬜️| Prometheus + Grafana
+
+⬜️| Paper - Title page
+
+⬜️| Paper - Introduction (Relevance, goals, ...)
+
+⬜️| Actions with patients from Frontend (run individual record)
+
+⬜️| Run backend application in MiniKube
+
+⬜️| [Fancy frontend (try tailwind ui components ?)](https://tailwindui.com/#components)
+
+⬜️| Another important feature ...
