@@ -73,11 +73,15 @@ services:
       - prometheus-data:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.external-url=${PROMETHEUS_SERVER_ROOT_URL:?err}"
 
   grafana:
     image: grafana/grafana
     volumes:
       - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL:?err}
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
 
 
 volumes:
