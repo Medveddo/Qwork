@@ -18,6 +18,7 @@ qwork.sizikov.space {
     }
 
     handle /prometheus/* {
+        uri strip_prefix /prometheus
         reverse_proxy prometheus:9090
     }
 

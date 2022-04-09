@@ -41,7 +41,7 @@ Also want deploy to Kubernetes
 
 ## TODO Checklist
 
-✅| Drink some water
+✅| Prometheus + Grafana
 
 ⬜️| Patient table in Postgres
 
@@ -52,8 +52,6 @@ Also want deploy to Kubernetes
 ⬜️| Periodic processing jobs
 
 ⬜️| FluentBit + Zinc
-
-⬜️| Prometheus + Grafana
 
 ⬜️| Paper - Title page
 
@@ -66,3 +64,5 @@ Also want deploy to Kubernetes
 ⬜️| [Fancy frontend (try tailwind ui components ?)](https://tailwindui.com/#components)
 
 ⬜️| Another important feature ...
+
+✅| Drink some water

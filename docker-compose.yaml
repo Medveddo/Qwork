@@ -74,6 +74,7 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--web.external-url=${PROMETHEUS_SERVER_ROOT_URL:?err}"
+      - "--web.route-prefix=/"
 
   grafana:
     image: grafana/grafana
