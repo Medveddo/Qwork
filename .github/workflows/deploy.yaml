@@ -37,7 +37,9 @@ jobs:
         password: ${{ secrets.SERVER_SSH_PASSWORD }}
         script: |
           cd /usr/src/app
-          git pull origin master
+          git fetch --all
+          git reset --hard origin/master
+          
           rm .env
           touch .env
           echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
@@ -51,6 +53,7 @@ jobs:
           echo VITE_ENVIRONMENT=${{ secrets.VITE_ENVIRONMENT }} >> .env
           echo ZINC_FIRST_ADMIN_USER=${{ secrets.ZINC_FIRST_ADMIN_USER }} >> .env
           echo ZINC_FIRST_ADMIN_PASSWORD=${{ secrets.ZINC_FIRST_ADMIN_PASSWORD }} >> .env
+
           export ZINC_FIRST_ADMIN_USER=${{ secrets.ZINC_FIRST_ADMIN_USER }}
           export ZINC_FIRST_ADMIN_PASSWORD=${{ secrets.ZINC_FIRST_ADMIN_PASSWORD }}
           chmod +x ./ci-cd/deploy.sh
