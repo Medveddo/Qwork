@@ -10,23 +10,18 @@ services:
       - POSTGRES_USER=${POSTGRES_USER:?err}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?err}
       - POSTGRES_DB=${POSTGRES_DB:?err}
-    depends_on:
-      - fluent-bit
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: db.logs
+    # depends_on:
+    #   - fluent-bit
 
   redis:
     image: redis:alpine
-    depends_on:
-      - fluent-bit
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: redis.logs
+    # depends_on:
+    #   - fluent-bit
+    # logging:
+    #   driver: "fluentd"
+    #   options:
+    #     fluentd-address: localhost:24224
+    #     tag: redis.logs
 
   backend:
     image: qwork-backend
@@ -37,16 +32,16 @@ services:
       - DRAMATIQ_BROKER_URL=${DRAMATIQ_BROKER_URL:?err}
     ports:
       - "8001:8000"
-    command: bash -c "./scripts/run.sh"
+    command:
+      sh -c "chmod +x /app/scripts/run.local.sh &&
+          ./scripts/run.local.sh"
+    volumes:
+      - ./backend:/app
     depends_on:
       - db
       - redis
-      - fluent-bit
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: backend.logs
+      # - fluent-bit
+
   
   dramatiq:
     image: qwork-backend
@@ -55,19 +50,22 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL:?err}
       - DRAMATIQ_BROKER_URL=${DRAMATIQ_BROKER_URL:?err}
+    volumes:
+      - ./backend:/app
     ports:
       - "9191:9191"
     command: >
-      sh -c "./scripts/run_dramatiq.sh"
+      sh -c "chmod +x /app/scripts/run_dramatiq.local.sh &&
+             ./scripts/run_dramatiq.local.sh"
     depends_on:
       - db
       - redis
-      - fluent-bit
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: dramatiq.logs
+      # - fluent-bit
+    # logging:
+    #   driver: "fluentd"
+    #   options:
+    #     fluentd-address: localhost:24224
+    #     tag: dramatiq.logs
 
   scheduler:
     image: qwork-backend
@@ -81,12 +79,12 @@ services:
     depends_on:
       - db
       - redis
-      - fluent-bit
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: scheduler.logs
+      # - fluent-bit
+    # logging:
+    #   driver: "fluentd"
+    #   options:
+    #     fluentd-address: localhost:24224
+    #     tag: scheduler.logs
 
   frontend:
     image: qwork-frontend
@@ -95,80 +93,80 @@ services:
       args:
         - VITE_API_URL=${VITE_API_URL:?err}
         - VITE_ENVIRONMENT=${VITE_ENVIRONMENT:?err}
-    depends_on:
-      - fluent-bit
+    # depends_on:
+    #   - fluent-bit
     ports:
       - "8000:80"
     volumes:
       - ./frontend/Caddyfile_local:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: frontend.logs
+    # logging:
+    #   driver: "fluentd"
+    #   options:
+    #     fluentd-address: localhost:24224
+    #     tag: frontend.logs
 
-  prometheus:
-    image: prom/prometheus:latest
-    ports:
-      - "9090:9090"
-    depends_on:
-      - fluent-bit
-    volumes:
-      - ./prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus-data:/prometheus
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: prometheus.logs
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   ports:
+  #     - "9090:9090"
+  #   depends_on:
+  #     - fluent-bit
+  #   volumes:
+  #     - ./prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml
+  #     - prometheus-data:/prometheus
+  #   command:
+  #     - "--config.file=/etc/prometheus/prometheus.yml"
+  #   logging:
+  #     driver: "fluentd"
+  #     options:
+  #       fluentd-address: localhost:24224
+  #       tag: prometheus.logs
 
-  grafana:
-    image: grafana/grafana
-    ports:
-      - "3000:3000"
-    depends_on:
-      - fluent-bit
-    volumes:
-      - grafana-data:/var/lib/grafana
-    logging:
-      driver: "fluentd"
-      options:
-        fluentd-address: localhost:24224
-        tag: grafana.logs
+  # grafana:
+  #   image: grafana/grafana
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - fluent-bit
+  #   volumes:
+  #     - grafana-data:/var/lib/grafana
+  #   logging:
+  #     driver: "fluentd"
+  #     options:
+  #       fluentd-address: localhost:24224
+  #       tag: grafana.logs
   
-  cloudbeaver:
-    image: dbeaver/cloudbeaver:latest
-    ports:
-    - "8080:8978"
-    volumes:
-      - cloudbeaver-data:/opt/cloudbeaver/workspace
+  # cloudbeaver:
+  #   image: dbeaver/cloudbeaver:latest
+  #   ports:
+  #   - "8080:8978"
+  #   volumes:
+  #     - cloudbeaver-data:/opt/cloudbeaver/workspace
   
-  fluent-bit:
-    image: fluent/fluent-bit
-    ports:
-      - "24224:24224"
-      - "24224:24224/udp"
-    depends_on:
-      - zinc
-    volumes:
-      - ./fluent-bit/conf:/fluent-bit/etc
+  # fluent-bit:
+  #   image: fluent/fluent-bit
+  #   ports:
+  #     - "24224:24224"
+  #     - "24224:24224/udp"
+  #   depends_on:
+  #     - zinc
+  #   volumes:
+  #     - ./fluent-bit/conf:/fluent-bit/etc
 
-  zinc:
-    image: qwork-zinc
-    build:
-      context: ./zinc
-      dockerfile: Dockerfile
-      args:
-        - ZINC_FIRST_ADMIN_USER=admin
-        - ZINC_FIRST_ADMIN_PASSWORD=admin
-    ports:
-      - "4080:4080"
-    volumes:
-      - zinc-data:/data # TODO data does not persist after container recreating 
+  # zinc:
+  #   image: qwork-zinc
+  #   build:
+  #     context: ./zinc
+  #     dockerfile: Dockerfile
+  #     args:
+  #       - ZINC_FIRST_ADMIN_USER=admin
+  #       - ZINC_FIRST_ADMIN_PASSWORD=admin
+  #   ports:
+  #     - "4080:4080"
+  #   volumes:
+  #     - zinc-data:/data # TODO data does not persist after container recreating 
 
 volumes:
   caddy_data:

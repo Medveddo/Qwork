@@ -1,5 +1,5 @@
 {
-  "name": "Qwork-frontend",
+  "name": "qwork-frontend",
   "version": "0.0.2",
   "scripts": {
     "dev": "svelte-kit dev",
