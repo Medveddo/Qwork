@@ -116,6 +116,9 @@ services:
       - zinc
     volumes:
       - ./fluent-bit/conf:/fluent-bit/etc
+    environment:
+      - ZINC_FIRST_ADMIN_USER=${ZINC_FIRST_ADMIN_USER:?err}
+      - ZINC_FIRST_ADMIN_PASSWORD=${ZINC_FIRST_ADMIN_PASSWORD:?err}
 
   zinc:
     image: qwork-zinc
