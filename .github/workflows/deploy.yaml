@@ -49,5 +49,9 @@ jobs:
           echo PROMETHEUS_SERVER_ROOT_URL=${{ secrets.PROMETHEUS_SERVER_ROOT_URL }} >> .env
           echo VITE_API_URL=${{ secrets.VITE_API_URL }} >> .env
           echo VITE_ENVIRONMENT=${{ secrets.VITE_ENVIRONMENT }} >> .env
+          echo ZINC_FIRST_ADMIN_USER=${{ secrets.ZINC_FIRST_ADMIN_USER }} >> .env
+          echo ZINC_FIRST_ADMIN_PASSWORD=${{ secrets.ZINC_FIRST_ADMIN_PASSWORD }} >> .env
+          export ZINC_FIRST_ADMIN_USER=${{ secrets.ZINC_FIRST_ADMIN_USER }}
+          export ZINC_FIRST_ADMIN_PASSWORD=${{ secrets.ZINC_FIRST_ADMIN_PASSWORD }}
           chmod +x ./ci-cd/deploy.sh
           ./ci-cd/deploy.sh

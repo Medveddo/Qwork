@@ -24,6 +24,12 @@ services:
     depends_on:
       - db
       - redis
+      - fluent-bit
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: backend.logs
   
   dramatiq:
     image: qwork-backend
@@ -37,6 +43,12 @@ services:
     depends_on:
       - db
       - redis
+      - fluent-bit
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: dramatiq.logs
 
   scheduler:
     image: qwork-backend
@@ -50,6 +62,12 @@ services:
     depends_on:
       - db
       - redis
+      - fluent-bit
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: scheduler.logs
 
   frontend:
     image: qwork-frontend
@@ -83,7 +101,32 @@ services:
     environment:
       - GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL:?err}
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
+  
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:latest
+    volumes:
+      - cloudbeaver-data:/opt/cloudbeaver/workspace
 
+  fluent-bit:
+    image: fluent/fluent-bit
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    depends_on:
+      - zinc
+    volumes:
+      - ./fluent-bit/conf:/fluent-bit/etc
+
+  zinc:
+    image: qwork-zinc
+    build:
+      context: ./zinc
+      dockerfile: Dockerfile
+      args:
+        - ZINC_FIRST_ADMIN_USER=${ZINC_FIRST_ADMIN_USER:?err}
+        - ZINC_FIRST_ADMIN_PASSWORD=${ZINC_FIRST_ADMIN_PASSWORD:?err}
+    volumes:
+      - zinc-data:/data # TODO data does not persist after container recreating 
 
 volumes:
   caddy_data:
@@ -91,3 +134,5 @@ volumes:
   postgres-db:
   prometheus-data:
   grafana-data:
+  cloudbeaver-data:
+  zinc-data:

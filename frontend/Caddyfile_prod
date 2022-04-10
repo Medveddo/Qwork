@@ -27,3 +27,11 @@ qwork.sizikov.space {
     file_server
 
 }
+
+cloudbeaver.qwork.sizikov.space {
+    reverse_proxy cloudbeaver:8978
+}
+
+zinc.qwork.sizikov.space {
+    reverse_proxy zinc:4080
+}
