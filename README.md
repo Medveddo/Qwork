@@ -43,15 +43,15 @@ Also want deploy to Kubernetes
 
 ✅| Prometheus + Grafana
 
+✅| CloudBeaver
+
+✅| FluentBit + Zinc
+
 ⬜️| Patient table in Postgres
 
 ⬜️| [Implement HashIDs](https://github.com/davidaurelio/hashids-python)
 
-⬜️| CloudBeaver
-
 ⬜️| Periodic processing jobs
-
-⬜️| FluentBit + Zinc
 
 ⬜️| Paper - Title page
 
