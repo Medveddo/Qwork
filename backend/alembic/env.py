@@ -34,7 +34,7 @@ fileConfig(config.config_file_name)
 
 from app.database import engine, Base
 
-from app.models import TextProcessResult
+from app.models import Run, Patient
 
 target_metadata = Base.metadata
 

@@ -1,10 +1,20 @@
-from sqlalchemy import Boolean, Column, Float, Integer, Text
+from sqlalchemy import (
+    Boolean,
+    Column,
+    Float,
+    ForeignKey,
+    Integer,
+    Text,
+    String,
+    DateTime,
+)
+from sqlalchemy.orm import relationship
 
 from .database import Base
 
 
-class TextProcessResult(Base):
-    __tablename__ = "text_process_result"
+class Run(Base):
+    __tablename__ = "runs"
 
     id = Column(Integer, primary_key=True, index=True)
     text = Column(Text)
@@ -12,3 +22,19 @@ class TextProcessResult(Base):
     temperature = Column(Float, nullable=True)
     systole_pressure = Column(Integer, nullable=True)
     diastole_pressure = Column(Integer, nullable=True)
+    patient_id = Column(Integer, ForeignKey("patients.id"))
+
+    patient = relationship("Patient", back_populates="text_processes")
+
+    def show_info(self):
+        print(f"<Run#{self.id} {self.text} {self.patient_id}>")
+
+
+class Patient(Base):
+    __tablename__ = "patients"
+
+    id = Column(Integer, primary_key=True, index=True)
+    full_name = Column(String(length=255))
+    birthdate = Column(DateTime)
+
+    text_processes = relationship("Run", back_populates="patient")

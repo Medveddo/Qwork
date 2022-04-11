@@ -6,12 +6,10 @@ from . import models, schemas
 
 def get_history(db: Session):
     logger.info("Fetching all results from db")
-    results: list[models.TextProcessResult] = db.query(
-        models.TextProcessResult
-    ).all()
+    results: list[models.Run] = db.query(models.Run).all()
     logger.info(f"{results=}")
     return [
-        schemas.TextProcessResult(
+        schemas.Run(
             text=result.text,
             is_corresponding=result.is_corresponding,
             temperature=result.temperature,
@@ -22,9 +20,19 @@ def get_history(db: Session):
     ]
 
 
-def create_text_process_result(db: Session, result: schemas.TextProcessResult):
-    db_result = models.TextProcessResult(**result.dict())
+def create_text_process_result(db: Session, result: schemas.Run) -> models.Run:
+    db_result = models.Run(**result.dict())
     db.add(db_result)
     db.commit()
     db.refresh(db_result)
     return db_result
+
+
+def create_patient(db: Session, patient: schemas.Patient) -> models.Patient:
+    dict_patient = patient.dict()
+    dict_patient.pop("id_")
+    db_patient = models.Patient(**dict_patient)
+    db.add(db_patient)
+    db.commit()
+    db.refresh(db_patient)
+    return db_patient

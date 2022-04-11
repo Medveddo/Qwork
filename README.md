@@ -1,8 +1,8 @@
 # Text analysis system (Bachelor's qualification work in NSTU)
 
-## Local development
+## How to run
 
-1. Create .env file with variables:
+Create .env file with variables:
 
 ```dotenv
 DATABASE_URL=postgresql://postgres:postgres@db:5432/qwork
@@ -14,9 +14,7 @@ VITE_API_URL=http://localhost:8000/api/
 VITE_ENVIRONMENT=local
 ```
 
-2. Copy data from Caddyfile_local to Caddyfile
-
-3. Run
+Docker compose up:
 
 ```shell
 docker-compose --file docker-compose.local.yaml up --build
@@ -47,9 +45,19 @@ Also want deploy to Kubernetes
 
 ✅| FluentBit + Zinc
 
-⬜️| Patient table in Postgres
+✅| Patient table in Postgres
+
+✅| SQLAlchemy Relation between ProcessTextRun and Patient
+
+✅| Rename ProcessTextRun to Run
+
+⬜️| Split requirements
+
+⬜️| Pytest
 
 ⬜️| [Implement HashIDs](https://github.com/davidaurelio/hashids-python)
+
+⬜️| Move API from qwork.sizikov.space/api/ to api.qwork.sizikov.space
 
 ⬜️| Periodic processing jobs
 

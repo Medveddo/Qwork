@@ -1,8 +1,8 @@
 # Text analysis system (Bachelor's qualification work in NSTU)
 
-`uvicorn app.main:app`
+`uvicorn app.main:app --reload`
 
-`dramatiq app.dramatiq:DRAMATIQ_REDIS_BROKER app.tasks -t 1 -p 1`
+`dramatiq app.dramatiq:DRAMATIQ_BROKER app.tasks -t 1 -p 1`
 
 `python -m app.scheduler`
 

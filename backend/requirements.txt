@@ -1,15 +1,17 @@
 alembic
 apscheduler
-black
-dramatiq[redis,watch]
+black # local
+dramatiq[redis,watch] # watch - local
+Faker # local
 fastapi
-flake8
-isort
+flake8 # local
+isort # local
 jinja2
 loguru
 natasha
 psycopg2-binary
 python-dotenv
+pytest # local
 sqlalchemy
 starlette_exporter
 uvicorn

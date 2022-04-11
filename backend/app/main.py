@@ -57,7 +57,7 @@ async def process_text(
 
     result = verify_temp_and_blood_pressure(input.text)
 
-    result_ = schemas.TextProcessResult(
+    result_ = schemas.Run(
         text=input.text,
         is_corresponding=result.is_correspond,
         temperature=result.temperature,
@@ -88,7 +88,7 @@ async def process_text(
     return result_dict
 
 
-@app.get("/history", response_model=list[schemas.TextProcessResult])
+@app.get("/history", response_model=list[schemas.Run])
 def read_history(request: Request, db: Session = Depends(get_db)):
     results = crud.get_history(db)
     logger.debug(f"{results=}")
