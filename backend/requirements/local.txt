@@ -1,0 +1,7 @@
+-r base.txt
+
+black
+dramatiq[redis,watch]
+flake8
+isort
+pytest

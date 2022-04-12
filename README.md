@@ -53,17 +53,25 @@ Also want deploy to Kubernetes
 
 ⬜️| Split requirements
 
-⬜️| Pytest
-
 ⬜️| [Implement HashIDs](https://github.com/davidaurelio/hashids-python)
 
 ⬜️| Move API from qwork.sizikov.space/api/ to api.qwork.sizikov.space
+
+⬜️| Pytest
+
+⬜️| Create request simulator daemon that chaotic send HTTP-requests
+
+⬜️| Import CSV, XLSX records
+
+⬜️| Frontend actions with Patients
 
 ⬜️| Periodic processing jobs
 
 ⬜️| Paper - Title page
 
 ⬜️| Paper - Introduction (Relevance, goals, ...)
+
+⬜️| Paper - Comparation with existing solutions
 
 ⬜️| Actions with patients from Frontend (run individual record)
 
