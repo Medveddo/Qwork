@@ -1,10 +1,8 @@
 from datetime import datetime
-from app.schemas import Patient
 
 from app.crud import create_patient
-
 from app.database import SessionLocal
-
+from app.schemas import Patient
 
 # patient = Patient(
 #     id_=0,

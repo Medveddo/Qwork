@@ -1,0 +1,11 @@
+# .coveragerc to control coverage
+[run]
+command_line = -m pytest
+
+source = 
+    app
+
+omit = 
+    */dev/*
+    */venv/*
+    */tests/*

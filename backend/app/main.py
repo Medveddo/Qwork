@@ -1,7 +1,7 @@
 import datetime
 
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 from sqlalchemy.orm import Session
@@ -9,6 +9,7 @@ from starlette_exporter import PrometheusMiddleware, handle_metrics
 
 from app import crud, models, schemas
 from app.database import SessionLocal, engine
+from app.hashids import hashids_
 from app.nlp import verify_temp_and_blood_pressure
 from app.tasks import say_something
 
@@ -49,6 +50,20 @@ async def now(request: Request):
     return {"time": datetime.datetime.utcnow()}
 
 
+@app.get("/run/{hashid}")
+async def get_run(request: Request, hashid: str):
+    db_id = hashids_.from_hash_id(hashid)
+    if not db_id:
+        raise HTTPException(status_code=404, detail="Run not found")
+    try:
+        db = SessionLocal()
+        run: models.Run = db.query(models.Run).get(db_id)
+        run.show_info()
+        return 200
+    finally:
+        db.close()
+
+
 @app.post("/process_text")
 async def process_text(
     request: Request, input: schemas.TextInput, db: Session = Depends(get_db)
@@ -66,13 +81,14 @@ async def process_text(
     )
     logger.debug(f"{result_=}")
 
-    crud.create_text_process_result(db, result_)
+    run = crud.create_text_process_result(db, result_)
 
     result_dict = {
         "is_correspond": "❌",
         "temperature": "",
         "systole_pressure": "",
         "diastole_pressure": "",
+        "run_id": hashids_.to_hash_id(run.id),
     }
 
     if result.is_correspond:

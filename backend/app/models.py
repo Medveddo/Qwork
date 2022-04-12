@@ -1,12 +1,12 @@
 from sqlalchemy import (
     Boolean,
     Column,
+    DateTime,
     Float,
     ForeignKey,
     Integer,
-    Text,
     String,
-    DateTime,
+    Text,
 )
 from sqlalchemy.orm import relationship
 

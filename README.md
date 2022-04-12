@@ -53,13 +53,17 @@ Also want deploy to Kubernetes
 
 ✅| Split requirements
 
-⬜️| Move API from qwork.sizikov.space/api/ to api.qwork.sizikov.space
+⬜️| FastAPI/docs page fit info
 
-⬜️| Move /usr/src/app -> /usr/src/qwork at production OR give each container special name
+✅| Move API from qwork.sizikov.space/api/ to api.qwork.sizikov.space + grafana + prometheus
 
-⬜️| [Implement HashIDs](https://github.com/davidaurelio/hashids-python)
+✅| [Implement HashIDs](https://github.com/davidaurelio/hashids-python)
 
-⬜️| Pytest
+✅| Pytest, coverage
+
+⬜️| Pre-commit
+
+⬜️| Database tests
 
 ⬜️| Presist Zinc logs after container restart
 
@@ -82,6 +86,8 @@ Also want deploy to Kubernetes
 ⬜️| Run backend application in MiniKube
 
 ⬜️| [Fancy frontend (try tailwind ui components ?)](https://tailwindui.com/#components)
+
+⬜️| Move /usr/src/app -> /usr/src/qwork at production OR give each container special name
 
 ⬜️| Another important feature ...
 

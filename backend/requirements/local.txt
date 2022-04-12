@@ -5,3 +5,4 @@ dramatiq[redis,watch]
 flake8
 isort
 pytest
+coverage

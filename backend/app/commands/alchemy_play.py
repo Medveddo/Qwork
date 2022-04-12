@@ -1,10 +1,9 @@
 # Cheatsheet inspired by: https://pythonru.com/biblioteki/crud-sqlalchemy-orm
 
-from app.database import SessionLocal
-
-from app.models import Patient, Run
-
 from faker import Faker
+
+from app.database import SessionLocal
+from app.models import Patient, Run
 
 fake = Faker("ru_RU")
 

@@ -45,14 +45,15 @@ jobs:
           echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
           echo DRAMATIQ_BROKER_URL=${{ secrets.DRAMATIQ_BROKER_URL }} >> .env
           echo GF_SERVER_ROOT_URL=${{ secrets.GF_SERVER_ROOT_URL }} >> .env
+          echo HASHIDS_SALT=${{ secrets.HASHIDS_SALT }} >> .env
           echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
           echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
           echo PROMETHEUS_SERVER_ROOT_URL=${{ secrets.PROMETHEUS_SERVER_ROOT_URL }} >> .env
           echo VITE_API_URL=${{ secrets.VITE_API_URL }} >> .env
           echo VITE_ENVIRONMENT=${{ secrets.VITE_ENVIRONMENT }} >> .env
-          echo ZINC_FIRST_ADMIN_USER=${{ secrets.ZINC_FIRST_ADMIN_USER }} >> .env
           echo ZINC_FIRST_ADMIN_PASSWORD=${{ secrets.ZINC_FIRST_ADMIN_PASSWORD }} >> .env
+          echo ZINC_FIRST_ADMIN_USER=${{ secrets.ZINC_FIRST_ADMIN_USER }} >> .env
 
           export ZINC_FIRST_ADMIN_USER=${{ secrets.ZINC_FIRST_ADMIN_USER }}
           export ZINC_FIRST_ADMIN_PASSWORD=${{ secrets.ZINC_FIRST_ADMIN_PASSWORD }}

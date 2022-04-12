@@ -1,7 +1,9 @@
 __pycache__
+.coverage
 .env
 .vscode
 bin
 dev
+htmlcov
 node_modules
 venv

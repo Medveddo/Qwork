@@ -3,11 +3,13 @@ apscheduler
 dramatiq[redis]
 Faker
 fastapi
+hashids
 jinja2
 loguru
 natasha
 psycopg2-binary
 python-dotenv
+requests
 sqlalchemy
 starlette_exporter
 uvicorn

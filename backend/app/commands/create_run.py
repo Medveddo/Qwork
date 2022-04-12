@@ -1,6 +1,5 @@
-from app.database import SessionLocal
-
 import app.models as models
+from app.database import SessionLocal
 
 db = SessionLocal()
 
