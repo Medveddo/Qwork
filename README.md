@@ -51,13 +51,17 @@ Also want deploy to Kubernetes
 
 ✅| Rename ProcessTextRun to Run
 
-⬜️| Split requirements
-
-⬜️| [Implement HashIDs](https://github.com/davidaurelio/hashids-python)
+✅| Split requirements
 
 ⬜️| Move API from qwork.sizikov.space/api/ to api.qwork.sizikov.space
 
+⬜️| Move /usr/src/app -> /usr/src/qwork at production OR give each container special name
+
+⬜️| [Implement HashIDs](https://github.com/davidaurelio/hashids-python)
+
 ⬜️| Pytest
+
+⬜️| Presist Zinc logs after container restart
 
 ⬜️| Create request simulator daemon that chaotic send HTTP-requests
 

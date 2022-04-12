@@ -3,29 +3,21 @@ sizikov.space {
 }
 
 qwork.sizikov.space {
-
-    handle /api/* {
-        uri strip_prefix /api
-        reverse_proxy backend:8000
-    }
-
-    handle /openapi.json {
-        reverse_proxy backend:8000
-    }
-
-    handle /grafana/* {
-        reverse_proxy grafana:3000
-    }
-
-    handle /prometheus/* {
-        uri strip_prefix /prometheus
-        reverse_proxy prometheus:9090
-    }
-
     root * /srv
     # try_files {path} /index.html
     file_server
+}
 
+grafana.qwork.sizikov.space {
+    reverse_proxy grafana:3000
+}
+
+prometheus.qwork.sizikov.space {
+    reverse_proxy prometheus:9090
+}
+
+api.qwork.sizikov.space {
+    reverse_proxy backend:8000
 }
 
 cloudbeaver.qwork.sizikov.space {
