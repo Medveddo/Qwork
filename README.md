@@ -1,5 +1,11 @@
 # Text analysis system (Bachelor's qualification work in NSTU)
 
+Clinical recomendation is set of rules/topics (e.g. temperature or blood pressure) that medic shoud place in text to describe patient status. Valid therapy can be choosen if all those rules observed.
+
+This project is about creating system that helps check if topics are represented in text and extract related values from text.
+
+It provides REST API and packed with docker-compose. Frontend page powered by Svelte allows you to interact with the system.
+
 ## How to run
 
 Create .env file with variables:

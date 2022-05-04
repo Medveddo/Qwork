@@ -5,9 +5,9 @@ from . import models, schemas
 
 
 def get_history(db: Session):
-    logger.info("Fetching all results from db")
+    logger.debug("Fetching all results from db")
     results: list[models.Run] = db.query(models.Run).all()
-    logger.info(f"{results=}")
+    logger.info(f"Got {len(results)} history runs")
     return [
         schemas.Run(
             text=result.text,
@@ -25,6 +25,7 @@ def create_text_process_result(db: Session, result: schemas.Run) -> models.Run:
     db.add(db_result)
     db.commit()
     db.refresh(db_result)
+    logger.debug(f"Saved run to DB: <{result}>")
     return db_result
 
 

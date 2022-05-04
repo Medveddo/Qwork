@@ -13,3 +13,4 @@ requests
 sqlalchemy
 starlette_exporter
 uvicorn
+websockets
