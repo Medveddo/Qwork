@@ -35,6 +35,7 @@ jobs:
         host: ${{ secrets.SERVER_SSH_HOST }}
         username: ${{ secrets.SERVER_SSH_USERNAME }}
         password: ${{ secrets.SERVER_SSH_PASSWORD }}
+        command_timeout: 30m
         script: |
           cd /usr/src/app
           git fetch --all
