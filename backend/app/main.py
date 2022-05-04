@@ -36,7 +36,7 @@ origins = [
 app = FastAPI(
     title="QworkAPI",
     description=(
-        "REST API of web application responible for extracting structured " 
+        "REST API of web application responible for extracting structured "
         "data from text and checking text corresonding "
         "to clinical recomendations "
     ),
@@ -221,14 +221,16 @@ async def process_text(
         200: {
             "content": {
                 "application/json": {
-                    "example": [{
-                        "text": "Температура 37.9. Давление высокое - 120 на 80.",
-                        "is_correspond": True,
-                        "temperature": 37.9,
-                        "systole_pressure": 120,
-                        "diastole_pressure": 80,
-                        "run_id": "095zpx3ZdYMLwGkZ",
-                    }]
+                    "example": [
+                        {
+                            "text": "Температура 37.9. Давление высокое - 120 на 80.",  # noqa
+                            "is_correspond": True,
+                            "temperature": 37.9,
+                            "systole_pressure": 120,
+                            "diastole_pressure": 80,
+                            "run_id": "095zpx3ZdYMLwGkZ",
+                        }
+                    ]
                 }
             },
         }

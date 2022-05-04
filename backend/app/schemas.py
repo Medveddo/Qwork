@@ -1,5 +1,4 @@
 import datetime
-from lib2to3.pgen2.token import OP
 from typing import Optional
 
 from pydantic import BaseModel
@@ -44,6 +43,7 @@ class ResponseWithRunId(BaseModel):
                 "run_id": "095zpx3ZdYMLwGkZ",
             }
         }
+
 
 class Run(BaseModel):
     text: Optional[str]
