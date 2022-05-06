@@ -8,7 +8,6 @@ import app.tasks as tasks
 from app import crud, schemas
 from app.database import get_db
 from app.hashids import hashids_
-from app.nlp import verify_temp_and_blood_pressure
 from app.utils import health_check_app
 
 endpoints_router = APIRouter()
@@ -92,6 +91,7 @@ async def get_run(
 async def process_text_instant(
     request: Request, input: schemas.TextInput, db: Session = Depends(get_db)
 ) -> schemas.RunResult:
+    from app.nlp import verify_temp_and_blood_pressure
     logger.debug(f"Input text: {input}")
 
     result = verify_temp_and_blood_pressure(input.text)
