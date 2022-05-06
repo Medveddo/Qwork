@@ -92,6 +92,7 @@ async def process_text_instant(
     request: Request, input: schemas.TextInput, db: Session = Depends(get_db)
 ) -> schemas.RunResult:
     from app.nlp import verify_temp_and_blood_pressure
+
     logger.debug(f"Input text: {input}")
 
     result = verify_temp_and_blood_pressure(input.text)
