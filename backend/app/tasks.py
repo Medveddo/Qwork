@@ -7,7 +7,6 @@ from sqlalchemy.orm.session import Session
 from app import crud, schemas
 from app.database import SessionLocal
 from app.dramatiq import DRAMATIQ_BROKER
-from app.nlp import verify_temp_and_blood_pressure
 
 
 @dramatiq.actor(broker=DRAMATIQ_BROKER)
@@ -17,6 +16,8 @@ def say_something():
 
 @dramatiq.actor(broker=DRAMATIQ_BROKER)
 def process_run(run_id: int) -> None:
+    from app.nlp import verify_temp_and_blood_pressure
+
     db: Session = SessionLocal()
 
     try:
