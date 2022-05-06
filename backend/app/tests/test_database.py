@@ -1,10 +1,10 @@
-from fastapi.testclient import TestClient
 import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.database import Base
-from app.main import app, get_db
+from app.database import Base, get_db
+from app.main import app
 
 SQLALCHEMY_DATABASE_URL = (
     "postgresql://postgres:postgres@localhost:5432/qwork_test"
@@ -38,7 +38,7 @@ def init_and_destroy_db() -> None:
 
 def test_create_user(init_and_destroy_db: None):
     response = client.post(
-        "/process_text",
+        "/process_text_instant",
         json={"text": "Температура 37.9. Давление высокое - 120 на 80."},
     )
     assert response.status_code == 200

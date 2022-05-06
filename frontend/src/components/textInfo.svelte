@@ -23,12 +23,16 @@
 		<div class="card-body items-center text-center">
 			<h2 class="card-title">Результат обработки</h2>
 			<p>
-				<strong>Соответствует клиническим рекомендациям</strong>: {info.is_correspond
+				<strong>Соответствует клиническим рекомендациям</strong>: {info.is_corresponding
 					? 'Да'
 					: 'Нет'}<br />
-				<strong>Температура</strong>: {info.temperature}<br />
-				<strong>Систолическое давление</strong>: {info.systole_pressure}<br />
-				<strong>Диастолическое давление</strong>: {info.diastole_pressure}<br />
+				<strong>Температура</strong>: {info.temperature ? info.temperature : '-'}<br />
+				<strong>Систолическое давление</strong>: {info.systole_pressure
+					? info.systole_pressure
+					: '-'}<br />
+				<strong>Диастолическое давление</strong>: {info.diastole_pressure
+					? info.diastole_pressure
+					: '-'}<br />
 			</p>
 			<div class="card-actions justify-end">
 				<button class="btn btn-circle" on:click={clearInfo}>

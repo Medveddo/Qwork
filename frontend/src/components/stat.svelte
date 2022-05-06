@@ -1,3 +1,7 @@
+<script>
+	export let stats;
+</script>
+
 <div class="stats shadow">
 	<div class="stat">
 		<div class="stat-figure text-primary">
@@ -15,8 +19,8 @@
 			>
 		</div>
 		<div class="stat-title">Обработанно текстов</div>
-		<div class="stat-value text-primary">6</div>
-		<div class="stat-desc">На 21% больше, чем в предыдущий месяц</div>
+		<div class="stat-value text-primary">{stats.texts_processed_total}</div>
+		<!-- <div class="stat-desc">На 21% больше, чем в предыдущий месяц</div> -->
 	</div>
 
 	<div class="stat">
@@ -35,7 +39,9 @@
 			>
 		</div>
 		<div class="stat-title">Процент соответствия рекомендациям</div>
-		<div class="stat-value text-secondary">5.4%</div>
-		<div class="stat-desc">Больше всего в <strong>Амурской области</strong></div>
+		<div class="stat-value text-secondary">
+			{Math.round(stats.corresponding_runs_percent * 100 * 100) / 100}%
+		</div>
+		<!-- <div class="stat-desc">Больше всего в <strong>Амурской области</strong></div> -->
 	</div>
 </div>

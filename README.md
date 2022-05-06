@@ -67,13 +67,17 @@ Also want deploy to Kubernetes
 
 ✅| Pytest, coverage
 
+⬜️| SPELLING CORRECTION
+
+⬜️| Create request simulator daemon that chaotic send HTTP-requests
+
+⬜️| DB Schema: Clinics -> Patient -> Record -> Run
+
 ⬜️| Pre-commit
 
 ⬜️| Database tests
 
-⬜️| Presist Zinc logs after container restart
-
-⬜️| Create request simulator daemon that chaotic send HTTP-requests
+✅| Presist Zinc logs after container restart
 
 ⬜️| Import CSV, XLSX records
 
@@ -96,5 +100,11 @@ Also want deploy to Kubernetes
 ⬜️| Move /usr/src/app -> /usr/src/qwork at production OR give each container special name
 
 ⬜️| Another important feature ...
+
+⬜️| [Change Cbeaver Title](https://cloudbeaver.io/docs/Server-configuration/)
+
+⬜️| [Sticky footer](https://stackoverflow.com/questions/59812003/tailwindcss-fixed-sticky-footer-on-the-bottom)
+
+✅| [remove metrics logs](https://stackoverflow.com/questions/70809900/python-fastapi-health-check-logs)
 
 ✅| Drink some water

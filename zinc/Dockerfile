@@ -1,7 +1,5 @@
 FROM debian
 
-WORKDIR /app
-
 ARG ZINC_FIRST_ADMIN_USER
 ARG ZINC_FIRST_ADMIN_PASSWORD
 
@@ -18,4 +16,4 @@ RUN apt update && apt install curl tar -y && \
 
 EXPOSE 4080
 
-ENTRYPOINT [ "/app/zinc" ]
+ENTRYPOINT [ "/zinc" ]

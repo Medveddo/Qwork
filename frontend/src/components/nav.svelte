@@ -1,5 +1,9 @@
+<script>
+	const openapi_url = import.meta.env.VITE_API_URL + "docs"
+</script>
+
 <div class="navbar bg-base-100">
-	<div class="navbar-start">
+<div class="navbar-start">
 		<div class="dropdown">
 			<!-- svelte-ignore a11y-label-has-associated-control -->
 			<label tabindex="0" class="btn btn-ghost btn-circle">
@@ -24,10 +28,16 @@
 				<li><a rel="external" href="https://grafana.qwork.sizikov.space/">Grafana</a></li>
 				<li><a rel="external" href="https://cloudbeaver.qwork.sizikov.space/">CloudBeaver</a></li>
 				<li><a rel="external" href="https://zinc.qwork.sizikov.space/">Zinc</a></li>
-				<li><a rel="external" href="https://api.qwork.sizikov.space/docs">OpenAPI</a></li>
+				<li><a rel="external" href={openapi_url}>OpenAPI</a></li>
+
 			</ul>
 		</div>
 		<a class="btn btn-ghost normal-case text-xl" href="/">Qwork</a>
+		<div class="flex-none">
+			<ul class="menu menu-horizontal p-0">
+			  <li><a href="/history">История обработок</a></li>
+			</ul>
+		</div>
 	</div>
 
 	<div class="navbar-end">

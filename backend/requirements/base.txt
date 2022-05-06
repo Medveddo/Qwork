@@ -1,3 +1,4 @@
+aioredis
 alembic
 apscheduler
 dramatiq[redis]

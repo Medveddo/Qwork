@@ -15,30 +15,39 @@
 		});
 		return history;
 	};
-	let d = [];
+	let runs = [];
 	getHistory().then((data) => {
 		console.log(data);
-		d = data;
+		runs = data;
 	});
 </script>
 
-<table class="table-auto bg-cyan-100">
-	<thead class="border-2 border-orange-300">
-		<tr>
-			<th>#</th>
-			<th>Text</th>
-			<th>Temperatute</th>
-			<th>OK</th>
-		</tr>
-	</thead>
-	<tbody>
-		{#each d as run, i}
-			<tr class="border-2 border-orange-300">
+<div class="overflow-x-auto">
+	<table class="table w-full">
+		<thead>
+			<tr>
+				<th></th>
+				<th>Текст</th>
+				<th>Температура</th>
+				<th>Давление</th>
+				<th>Соответствует</th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each runs as run, i}
+			<tr>
 				<td>{i + 1}</td>
 				<td>{run.text}</td>
 				<td>{run.temperature ? run.temperature : "-"}</td>
+				<td>
+					{run.systole_pressure ? run.systole_pressure : "-"}
+					/{run.diastole_pressure ? run.diastole_pressure : "-"}
+				</td>
 				<td>{run.is_corresponding ? "✅" : "❌"}</td>
 			</tr>
-		{/each}
-	</tbody>
-</table>
+			{/each}
+		</tbody>
+	</table>
+</div>
+		
+

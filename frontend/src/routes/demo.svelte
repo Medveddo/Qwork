@@ -5,17 +5,14 @@
 
 	import TextInfo from '../components/textInfo.svelte';
 
-	const environment = import.meta.env.VITE_ENVIRONMENT;
-	const backend_host = import.meta.env.VITE_API_URL;
-	console.log(environment);
-	console.log(backend_host);
+	const api_url = import.meta.env.VITE_API_URL;
 
 	const EXAMPLE_TEXT = 'Температура 37.9. Давление высокое - 120 на 80.';
-	let text_info_result = null;
 
 	// User input bindings
 	let user_input = '';
 	let text_type_option = 'Тип заболевания';
+	let is_loading = false;
 
 	let is_active_error = false;
 	let error_message = '';
@@ -30,12 +27,13 @@
 	}
 
 	const processText = async () => {
-		console.log(text_type_option);
+		// console.log(text_type_option);
+		is_loading = true;
 		if (user_input === '') {
 			error_message = 'Текст для обработки не может быть пустым';
 			is_active_error = true;
 		}
-		const url = backend_host + 'process_text_instant';
+		const url = api_url + 'process_text';
 		const res = await fetch(url, {
 			method: 'POST',
 			headers: {
@@ -47,13 +45,18 @@
 			})
 		});
 		const data = await res.json();
-		console.log(data);
-		// text_info_result = data;
-        text_process_result.set(data)
-	};
-
-	const clearInfo = async () => {
-		text_info_result = null;
+		await new Promise(r => setTimeout(r, 1500));
+		const run_info_url = api_url + 'run/' + data.run_id;
+		const result = await fetch(run_info_url, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		const data2 = await result.json();
+		console.log(data2);
+		text_process_result.set(data2);
+		is_loading = false;
 	};
 </script>
 
@@ -107,22 +110,24 @@
 			</div>
 		</div>
 		<textarea
-			class="textarea textarea-primary my-2"
+			class="textarea textarea-primary my-2 max-w-screen"
 			bind:value={user_input}
 			placeholder={EXAMPLE_TEXT}
-			cols="60"
+			cols="40"
 			rows="5"
 		/>
 		<br />
 		<button class="btn btn-accent w-64 rounded-full" on:click={setExampleText}
 			>Вставить пример текста</button
 		>
-		<button class="btn btn-secondary w-64 rounded-full my-2" on:click={processText}
-			>Обработать и проверить</button
-		>
-		<button class="btn loading">loading</button>
-		
-        <TextInfo />
+		{#if is_loading}
+			<button class="btn loading my-2">Обрабатываем</button>
+		{:else}
+			<button class="btn btn-secondary w-64 rounded-full my-2" on:click={processText}
+				>Обработать и проверить</button
+			>
+		{/if}
 
+		<TextInfo />
 	</div>
 </main>

@@ -9,6 +9,7 @@ from sqlalchemy import (
     Text,
 )
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from .database import Base
 
@@ -23,6 +24,9 @@ class Run(Base):
     systole_pressure = Column(Integer, nullable=True)
     diastole_pressure = Column(Integer, nullable=True)
     patient_id = Column(Integer, ForeignKey("patients.id"))
+
+    created_at = Column(DateTime(timezone=False), server_default=func.now())
+    updated_at = Column(DateTime(timezone=False), onupdate=func.now())
 
     patient = relationship("Patient", back_populates="text_processes")
 

@@ -1,8 +1,10 @@
 # Text analysis system (Bachelor's qualification work in NSTU)
 
+`/Qwork/backend$ source venv/bin/activate`
+
 `uvicorn app.main:app --reload`
 
-`dramatiq app.dramatiq:DRAMATIQ_BROKER app.tasks -t 1 -p 1`
+`/Qwork/backend$ dramatiq app.dramatiq:DRAMATIQ_BROKER app.tasks -t 1 -p 1 --watch app`
 
 `python -m app.scheduler`
 

@@ -9,16 +9,15 @@
 
 <body class="flex flex-col min-h-screen">
 	<!-- HEADER -->
-  <header>
+	<header>
 		<Nav />
 	</header>
 
-  <!-- MAIN -->
-  <slot />
-	
-  <!-- FOOTER -->
-	<Footer />
+	<!-- MAIN -->
+	<slot />
 
+	<!-- FOOTER -->
+	<Footer />
 </body>
 
 <style>
