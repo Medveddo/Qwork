@@ -1,7 +1,7 @@
 from abc import ABC
 import os
 from time import sleep
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Dict, List
 from faker import Faker
 from loguru import logger
 import requests
@@ -24,6 +24,7 @@ rnd = SystemRandom()
 
 faker = Faker("ru_RU")
 
+
 def get_text_to_process() -> Dict[str, str]:
     text = ""
     type_ = "acute_coronary_syndrome"
@@ -36,7 +37,10 @@ def get_text_to_process() -> Dict[str, str]:
 
         pressure_base = 60
         pressure = pressure_base + rnd.randint(0, 30)
-        text = f"Температура {temperature:.1f}. Давление высокое - {pressure + 40} на {pressure}."
+        text = (
+            f"Температура {temperature:.1f}."
+            f"Давление высокое - {pressure + 40} на {pressure}."
+        )
     else:
         text = faker.text(max_nb_chars=60)
 
@@ -86,9 +90,7 @@ class Simulator:
         self.sleep_base = sleep_base
 
     def start(self):
-        logger.info(f"*************************")
-        logger.info(f"Start simulating activity")
-        logger.info(f"*************************")
+        logger.info("Start simulating activity ...")
 
         try:
             self._start()

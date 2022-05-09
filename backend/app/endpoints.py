@@ -47,7 +47,10 @@ async def now(request: Request):
     summary="Get text processing result",
 )
 async def get_run(
-    request: Request, hashid: str, response: Response, db: Session = Depends(get_db), 
+    request: Request,
+    hashid: str,
+    response: Response,
+    db: Session = Depends(get_db),
 ) -> schemas.Run:
     db_run_id = hashids_.from_hash_id(hashid)
     if not db_run_id:
@@ -57,9 +60,9 @@ async def get_run(
     logger.debug(f"Run: {run}")
     if not run.finished:
         response.status_code = status.HTTP_202_ACCEPTED
-        processing_run = schemas.ProcessingRun(run_id=hashid, finished=False) 
+        processing_run = schemas.ProcessingRun(run_id=hashid, finished=False)
         logger.debug(f"Run still processing: {processing_run}")
-        return 
+        return
 
     logger.success(run)
     return run
@@ -144,7 +147,10 @@ async def process_text_instant(
     },
 )
 async def process_text(
-    request: Request, response: Response, input: schemas.TextInput, db: Session = Depends(get_db)
+    request: Request,
+    response: Response,
+    input: schemas.TextInput,
+    db: Session = Depends(get_db),
 ) -> schemas.ResponseWithRunId:
     logger.debug(f"Input text: {input}")
 

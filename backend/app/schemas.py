@@ -16,6 +16,7 @@ class TextInput(BaseModel):
             }
         }
 
+
 class ProcessingRun(BaseModel):
     run_id: str
     finished: bool
@@ -27,6 +28,7 @@ class ProcessingRun(BaseModel):
                 "finished": False,
             }
         }
+
 
 class Run(BaseModel):
     is_corresponding: Optional[bool] = None
@@ -61,6 +63,7 @@ class ResponseWithRunId(BaseModel):
                 "run_id": "095zpx3ZdYMLwGkZ",
             }
         }
+
 
 class Patient(BaseModel):
     id_: int

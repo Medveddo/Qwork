@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 from app.hashids import hashids_
 
+
 def get_history(
     db: Session, count: int = 10, offset: int = 0
 ) -> List[schemas.Run]:
@@ -73,7 +74,7 @@ def get_run(db: Session, run_id: int) -> schemas.Run:
         diastole_pressure=db_run.diastole_pressure,
         finished=db_run.finished,
         type=db_run.type,
-        run_id=hashids_.to_hash_id(db_run.id)
+        run_id=hashids_.to_hash_id(db_run.id),
     )
 
 
