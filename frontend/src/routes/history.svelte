@@ -40,8 +40,7 @@
 				<td>{run.text}</td>
 				<td>{run.temperature ? run.temperature : "-"}</td>
 				<td>
-					{run.systole_pressure ? run.systole_pressure : "-"}
-					/{run.diastole_pressure ? run.diastole_pressure : "-"}
+					{run.systole_pressure ? run.systole_pressure : "-"}/{run.diastole_pressure ? run.diastole_pressure : "-"}
 				</td>
 				<td>{run.is_corresponding ? "✅" : "❌"}</td>
 			</tr>

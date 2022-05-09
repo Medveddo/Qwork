@@ -10,6 +10,7 @@ COPY ./scripts /app/scripts
 RUN chmod +x /app/scripts/wait-for-it.sh && \
     chmod +x /app/scripts/run.sh && \
     chmod +x /app/scripts/run_dramatiq.sh && \
+    chmod +x /app/scripts/run_simulator.sh && \
     chmod +x /app/scripts/run_scheduler.sh
 
 COPY ./alembic /app/alembic

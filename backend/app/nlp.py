@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
 from loguru import logger
+from pyaspeller import YandexSpeller
 from natasha import (
     Doc,
     MorphVocab,
@@ -220,7 +221,10 @@ def has_digits(text: str) -> bool:
 
 
 def verify_temp_and_blood_pressure(text: str) -> Result:
-    # Basic text actions
+    speller = YandexSpeller()
+    text = speller.spelled(text)
+
+    # Natasha text actions
     doc = Doc(text)
     doc.segment(segmenter)
     doc.tag_morph(morph_tagger)

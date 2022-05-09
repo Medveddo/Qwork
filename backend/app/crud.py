@@ -5,7 +5,7 @@ from loguru import logger
 from sqlalchemy.orm import Session
 
 from . import models, schemas
-
+from app.hashids import hashids_
 
 def get_history(
     db: Session, count: int = 10, offset: int = 0
@@ -26,6 +26,8 @@ def get_history(
             temperature=result.temperature,
             systole_pressure=result.systole_pressure,
             diastole_pressure=result.diastole_pressure,
+            type=result.type,
+            finished=result.finished,
         )
         for result in results
     ]
@@ -55,6 +57,8 @@ def get_runs_stat(db: Session) -> Tuple(int, float):
     correspond_runs = (
         db.query(models.Run).filter(models.Run.is_corresponding).count()
     )
+    if total_runs == 0:
+        return (0, 0.0)
     return (total_runs, correspond_runs / total_runs)
 
 
@@ -67,11 +71,14 @@ def get_run(db: Session, run_id: int) -> schemas.Run:
         temperature=db_run.temperature,
         systole_pressure=db_run.systole_pressure,
         diastole_pressure=db_run.diastole_pressure,
+        finished=db_run.finished,
+        type=db_run.type,
+        run_id=hashids_.to_hash_id(db_run.id)
     )
 
 
-def create_run(db: Session, text: str) -> models.Run:
-    db_run = models.Run(text=text)
+def create_run(db: Session, input: schemas.TextInput) -> models.Run:
+    db_run = models.Run(text=input.text, type=input.type)
     db.add(db_run)
     db.commit()
     db.refresh(db_run)
@@ -84,6 +91,7 @@ def update_run(db: Session, run_id: int, result: schemas.Run) -> models.Run:
     db_run.temperature = result.temperature
     db_run.systole_pressure = result.systole_pressure
     db_run.diastole_pressure = result.diastole_pressure
+    db_run.finished = result.finished
     db.add(db_run)
     db.commit()
     db.refresh(db_run)

@@ -108,3 +108,5 @@ Also want deploy to Kubernetes
 ✅| [remove metrics logs](https://stackoverflow.com/questions/70809900/python-fastapi-health-check-logs)
 
 ✅| Drink some water
+
+⬜️| Get NLP model metrics

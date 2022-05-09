@@ -9,6 +9,7 @@ jinja2
 loguru
 natasha
 psycopg2-binary
+pyaspeller
 python-dotenv
 requests
 sqlalchemy

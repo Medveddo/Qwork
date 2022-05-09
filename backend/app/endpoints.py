@@ -47,19 +47,22 @@ async def now(request: Request):
     summary="Get text processing result",
 )
 async def get_run(
-    request: Request, hashid: str, db: Session = Depends(get_db)
+    request: Request, hashid: str, response: Response, db: Session = Depends(get_db), 
 ) -> schemas.Run:
     db_run_id = hashids_.from_hash_id(hashid)
     if not db_run_id:
         raise HTTPException(status_code=404, detail="Run not found")
     logger.debug(f"Get run #{db_run_id}")
-    # asyncio.sleep(1)
-    # run = crud.get_run(run_id)
-    # if not run.finished:
-    #     await asyncio.sleep(0.5)
-    #     # try again ...
-    # return run
-    return crud.get_run(db, db_run_id)
+    run = crud.get_run(db, db_run_id)
+    logger.debug(f"Run: {run}")
+    if not run.finished:
+        response.status_code = status.HTTP_202_ACCEPTED
+        processing_run = schemas.ProcessingRun(run_id=hashid, finished=False) 
+        logger.debug(f"Run still processing: {processing_run}")
+        return 
+
+    logger.success(run)
+    return run
 
 
 @endpoints_router.post(
@@ -71,26 +74,26 @@ async def get_run(
         "Recomended to use '/process_text' enpoint that returns run_id "
         "then result can be retrieved at '/run_result/<run_id>'"
     ),
-    responses={
-        200: {
-            "content": {
-                "application/json": {
-                    "example": {
-                        "is_correspond": True,
-                        "temperature": 37.9,
-                        "systole_pressure": 120,
-                        "diastole_pressure": 80,
-                        "run_id": "095zpx3ZdYMLwGkZ",
-                    }
-                }
-            },
-        }
-    },
-    response_model=schemas.RunResult,
+    # responses={
+    #     200: {
+    #         "content": {
+    #             "application/json": {
+    #                 "example": {
+    #                     "is_correspond": True,
+    #                     "temperature": 37.9,
+    #                     "systole_pressure": 120,
+    #                     "diastole_pressure": 80,
+    #                     "run_id": "095zpx3ZdYMLwGkZ",
+    #                 }
+    #             }
+    #         },
+    #     }
+    # },
+    response_model=schemas.Run,
 )
 async def process_text_instant(
     request: Request, input: schemas.TextInput, db: Session = Depends(get_db)
-) -> schemas.RunResult:
+) -> schemas.Run:
     from app.nlp import verify_temp_and_blood_pressure
 
     logger.debug(f"Input text: {input}")
@@ -108,7 +111,7 @@ async def process_text_instant(
 
     run = crud.create_text_process_result(db, result_)
 
-    run_result = schemas.RunResult(run_id=hashids_.to_hash_id(run.id))
+    run_result = schemas.Run(run_id=hashids_.to_hash_id(run.id))
 
     if result.is_correspond:
         run_result.is_correspond = True
@@ -141,15 +144,16 @@ async def process_text_instant(
     },
 )
 async def process_text(
-    request: Request, input: schemas.TextInput, db: Session = Depends(get_db)
+    request: Request, response: Response, input: schemas.TextInput, db: Session = Depends(get_db)
 ) -> schemas.ResponseWithRunId:
     logger.debug(f"Input text: {input}")
 
-    run = crud.create_run(db, input.text)
+    run = crud.create_run(db, input)
 
     task = tasks.process_run.send(run.id)
     logger.debug(f"Start background processing task {task}")
 
+    response.status_code = status.HTTP_202_ACCEPTED
     return {"run_id": hashids_.to_hash_id(run.id)}
 
 

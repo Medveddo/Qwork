@@ -35,6 +35,8 @@ def process_run(run_id: int) -> None:
             temperature=result.temperature,
             systole_pressure=result.systole_pressure,
             diastole_pressure=result.diastole_pressure,
+            type=run.type,
+            finished=True,
         )
         logger.debug(f"{result_=}")
 

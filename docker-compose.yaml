@@ -124,7 +124,16 @@ services:
         - ZINC_FIRST_ADMIN_USER=${ZINC_FIRST_ADMIN_USER:?err}
         - ZINC_FIRST_ADMIN_PASSWORD=${ZINC_FIRST_ADMIN_PASSWORD:?err}
     volumes:
-      - zinc-data:/data # TODO data does not persist after container recreating 
+      - zinc-data:/data
+  
+  activity_simulator:
+    image: qwork-backend
+    build:
+      context: ./backend
+    command: bash -c "./scripts/run_simulator.sh"
+    depends_on:
+      - db
+      - redis
 
 volumes:
   caddy_data:

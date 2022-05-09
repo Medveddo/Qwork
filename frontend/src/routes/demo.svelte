@@ -1,5 +1,5 @@
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	// import { onMount, onDestroy } from 'svelte';
 
 	import { text_process_result } from '../stores.js';
 
@@ -8,13 +8,14 @@
 	const api_url = import.meta.env.VITE_API_URL;
 
 	const EXAMPLE_TEXT = 'Температура 37.9. Давление высокое - 120 на 80.';
+	const TEXT_TYPE_DEAFULT = 'Тип заболевания'
 
 	// User input bindings
 	let user_input = '';
-	let text_type_option = 'Тип заболевания';
+	let text_type_option = TEXT_TYPE_DEAFULT;
 	let is_loading = false;
 
-	let is_active_error = false;
+	let is_active_error = false; // TODO: move to __layout as alert component with store usage
 	let error_message = '';
 
 	function clearError() {
@@ -27,12 +28,21 @@
 	}
 
 	const processText = async () => {
-		// console.log(text_type_option);
-		is_loading = true;
+	
 		if (user_input === '') {
 			error_message = 'Текст для обработки не может быть пустым';
 			is_active_error = true;
+			return
 		}
+
+		if (text_type_option === TEXT_TYPE_DEAFULT || text_type_option === '')
+		{
+			error_message = 'Выберите тип заболевания';
+			is_active_error = true;
+			return
+		}
+
+		is_loading = true;
 		const url = api_url + 'process_text';
 		const res = await fetch(url, {
 			method: 'POST',
@@ -45,17 +55,29 @@
 			})
 		});
 		const data = await res.json();
-		await new Promise(r => setTimeout(r, 1500));
-		const run_info_url = api_url + 'run/' + data.run_id;
-		const result = await fetch(run_info_url, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		});
-		const data2 = await result.json();
-		console.log(data2);
-		text_process_result.set(data2);
+
+		let requests_count = 0;
+		let response_status_code = 0;
+		let run_data = {};
+		do {
+			await new Promise((r) => setTimeout(r, 500));
+			const run_info_url = api_url + 'run/' + data.run_id;
+			const result = await fetch(run_info_url, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+			response_status_code = result.status
+			// console.log(requests_count, response_status_code)
+			const fetched_run_data = await result.json();
+			// console.log(fetched_run_data);
+			run_data = fetched_run_data
+			requests_count++
+		} while (response_status_code != 200 && requests_count < 10);
+
+		console.log(run_data)
+		text_process_result.set(run_data);
 		is_loading = false;
 	};
 </script>
