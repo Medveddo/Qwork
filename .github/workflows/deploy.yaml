@@ -37,7 +37,7 @@ jobs:
         password: ${{ secrets.SERVER_SSH_PASSWORD }}
         command_timeout: 30m
         script: |
-          cd /usr/src/app
+          cd /usr/docker/qwork
           git fetch --all
           git reset --hard origin/master
           
