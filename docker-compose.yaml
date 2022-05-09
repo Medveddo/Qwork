@@ -134,6 +134,7 @@ services:
     depends_on:
       - db
       - redis
+      - backend
 
 volumes:
   caddy_data:

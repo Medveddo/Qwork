@@ -58,7 +58,7 @@ class GetEndpoint:
 
     def request(self) -> None:
         logger.debug(f"Requesting {self.url}")
-        response = requests.get(self.url)
+        response = requests.get(self.url, timeout=15)
         logger.debug(f"Got status code {response.status_code}")
 
 
@@ -70,7 +70,7 @@ class PostEndpoint:
     def request(self) -> None:
         data = self.data_function()
         logger.debug(f"Requesting {self.url} with data: {data}")
-        response = requests.post(self.url, json=data)
+        response = requests.post(self.url, json=data, timeout=15)
         logger.debug(f"Got status code {response.status_code}")
 
 
