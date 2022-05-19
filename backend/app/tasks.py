@@ -9,22 +9,21 @@ from app.database import SessionLocal
 from app.dramatiq import DRAMATIQ_BROKER
 
 
-@dramatiq.actor(broker=DRAMATIQ_BROKER)
+@dramatiq.actor(broker=DRAMATIQ_BROKER, store_results=True)
 def say_something():
-    print(f" {datetime.datetime.utcnow()} I'm fine!")
+    print(f"{datetime.datetime.utcnow()} I'm fine!")
+    return f"{datetime.datetime.utcnow()} I'm fine!"
 
 
 @dramatiq.actor(broker=DRAMATIQ_BROKER)
 def process_run(run_id: int) -> None:
+    logger.info(f"Start processing Run#{run_id}")
     from app.nlp import verify_temp_and_blood_pressure
 
     db: Session = SessionLocal()
+    logger.info("Opened session to DB")
 
     try:
-        logger.critical(run_id)
-        logger.critical(run_id)
-        logger.success(db.is_active)
-
         run = crud.get_run(db, run_id)
 
         result = verify_temp_and_blood_pressure(run.text)
@@ -44,3 +43,4 @@ def process_run(run_id: int) -> None:
         logger.success(f"Processed run #{run_id}: {result_}")
     finally:
         db.close()
+        logger.debug("Closed session to DB.")

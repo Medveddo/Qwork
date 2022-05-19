@@ -4,8 +4,9 @@ from typing import List
 from loguru import logger
 from sqlalchemy.orm import Session
 
-from . import models, schemas
 from app.hashids import hashids_
+
+from . import models, schemas
 
 
 def get_history(
@@ -35,7 +36,14 @@ def get_history(
 
 
 def create_text_process_result(db: Session, result: schemas.Run) -> models.Run:
-    db_result = models.Run(**result.dict())
+    db_result = models.Run(
+        text=result.text,
+        is_corresponding=result.is_corresponding,
+        temperature=result.temperature,
+        systole_pressure=result.systole_pressure,
+        finished=result.finished,
+        type=result.type,
+    )
     db.add(db_result)
     db.commit()
     db.refresh(db_result)

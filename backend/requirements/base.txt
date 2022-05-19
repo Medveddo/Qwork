@@ -11,6 +11,7 @@ natasha
 psycopg2-binary
 pyaspeller
 python-dotenv
+python-Levenshtein
 requests
 sqlalchemy
 starlette_exporter

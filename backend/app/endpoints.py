@@ -9,6 +9,7 @@ from app import crud, schemas
 from app.database import get_db
 from app.hashids import hashids_
 from app.utils import health_check_app
+from app.nlp.services import FeatureFidnder
 
 endpoints_router = APIRouter()
 
@@ -68,6 +69,13 @@ async def get_run(
     return run
 
 
+from app.nlp.services.finder import FINDER
+from app.nlp.entities.clinrec import (
+    ACUTE_CORONARY_SYNDROME_CLINICAL_RECOMENDATIONS,
+    ATRIAL_FIBRILATION_AND_FLUTTER_CLINICAL_RECOMENDATIONS,
+)
+
+
 @endpoints_router.post(
     "/process_text_instant",
     tags=["Text process"],
@@ -97,7 +105,7 @@ async def get_run(
 async def process_text_instant(
     request: Request, input: schemas.TextInput, db: Session = Depends(get_db)
 ) -> schemas.Run:
-    from app.nlp import verify_temp_and_blood_pressure
+    from app.nlp.nlp import verify_temp_and_blood_pressure
 
     logger.debug(f"Input text: {input}")
 
@@ -109,21 +117,34 @@ async def process_text_instant(
         temperature=result.temperature,
         systole_pressure=result.systole_pressure,
         diastole_pressure=result.diastole_pressure,
+        finished=True,
+        type=input.type,
     )
     logger.debug(f"{result_=}")
 
     run = crud.create_text_process_result(db, result_)
 
-    run_result = schemas.Run(run_id=hashids_.to_hash_id(run.id))
+    
 
-    if result.is_correspond:
-        run_result.is_correspond = True
-    if result.temperature:
-        run_result.temperature = result.temperature
-    if result.systole_pressure:
-        run_result.systole_pressure = result.systole_pressure
-    if result.diastole_pressure:
-        run_result.diastole_pressure = result.diastole_pressure
+    run_result = schemas.Run(
+        run_id=hashids_.to_hash_id(run.id),
+        temperature=run.temperature,
+        systole_pressure=run.systole_pressure,
+        diastole_pressure=run.diastole_pressure,
+        is_corresponding=run.is_corresponding,
+        text=run.text,
+        type=run.type,
+        finished=run.finished,
+    )
+
+    # if result.is_correspond:
+    #     run_result.is_correspond = True
+    # if result.temperature:
+    #     run_result.temperature = result.temperature
+    # if result.systole_pressure:
+    #     run_result.systole_pressure = result.systole_pressure
+    # if result.diastole_pressure:
+    #     run_result.diastole_pressure = result.diastole_pressure
 
     logger.debug(run_result.json())
     return run_result
@@ -205,6 +226,5 @@ def read_history(
 )
 def dramatiq(request: Request):
     tasks.say_something()
-    tasks.say_something.send()
-    # tasks.process_run(1)
-    return "Ok!"
+    message = tasks.say_something.send()
+    return message.get_result(block=True)

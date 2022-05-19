@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
 from loguru import logger
-from pyaspeller import YandexSpeller
 from natasha import (
     Doc,
     MorphVocab,
@@ -14,6 +13,7 @@ from natasha import (
     Segmenter,
 )
 from natasha.doc import DocSent, DocToken
+from pyaspeller import YandexSpeller
 
 segmenter = Segmenter()
 morph_vocab = MorphVocab()
@@ -37,6 +37,7 @@ class TempBloodPressRecomendations:
     def is_fully_correspond(self) -> bool:
         if (
             self.temperature
+            and self.blood_pressure
             and self.blood_pressure[0]
             and self.blood_pressure[1]
         ):
@@ -50,7 +51,11 @@ class TempBloodPressRecomendations:
         else:
             logger.info("Temperature is not found in text.")
 
-        if self.blood_pressure[0] and self.blood_pressure[1]:
+        if (
+            self.blood_pressure
+            and self.blood_pressure[0]
+            and self.blood_pressure[1]
+        ):
             logger.info(f"Blood pressure: {self.blood_pressure}")
         else:
             logger.info("Blood pressure is not found in text.")
@@ -58,7 +63,7 @@ class TempBloodPressRecomendations:
 
 RECOMENDATIONS_KEYWORDS = {
     "temperature": ("температура", "темп"),
-    "blood_pressure": ("давление", "артериальный", "давл"),
+    "blood_pressure": ("давление", "артериальный", "давл", "ад"),
 }
 
 
@@ -248,7 +253,7 @@ def verify_temp_and_blood_pressure(text: str) -> Result:
             logger.success(f"Found temperature: {temperature}")
             recomendations_correspondence.temperature = temperature
             result.temperature = temperature
-        if blood_pressure:
+        if blood_pressure and all(blood_pressure):
             logger.success(f"Found blood pressure: {blood_pressure}")
             recomendations_correspondence.blood_pressure = blood_pressure
             result.systole_pressure = blood_pressure[0]
@@ -261,4 +266,45 @@ def verify_temp_and_blood_pressure(text: str) -> Result:
 
 
 if __name__ == "__main__":
-    logger.info("Temperature and blood pressure text processor")
+    texts = [
+        # "Мама мыла раму",  # ❌
+        # "Температура давление",  # ❌
+        "Пациент приехал с температурой 38.6 градусов. Артериальное давление высокое - 160/120",  # ✅
+        "Температура 37 Давление 100/80.",  # ✅
+        "Температура градусов 37. Давление 100 и 80.",  # ✅
+        "Температура градусов 37. Давление 120 на 100.",  # ✅
+        "Температура градусов 37. Давление 100",  # ✅
+        "температура 36 давление 120 и 80",  # ✅
+        "Температура в норме, давление окей",  # ✅
+        "Температура 38. Давление низкое",  # ✅
+        "37 температура 120/80 давление",  # ✅
+        "Повышенная температура. Давление 90",  # ✅
+        "Повышенная температура. давление 90",  # ✅
+        "давление 140/100, температура 38.4",  # ✅
+        "температура с давлением были высоки - 39.1 и 160/110",  # ✅
+        "Температура и давление пациента: 37 и 120/80",  # ✅
+        "Температура и давление 37 и 100 соответственно",  # ✅
+        "Температура и давление 37 и 100/70 соответственно",  # ✅
+        "Температура и давление были 39.1, 190",  # ✅
+        "Температура и давление были 39.1, 190 на 120",  # ✅
+        # "Темп 37 гц, давл 190/120, прекол",
+        "Состояние: удовлетворительное. АД  130/80  мм. рт.ст. Тоны сердца: аритмичные, приглушены. Дыхание: везикулярное, хрипов нет. Живот б/о. На ЭКГ - фибрилляция предсердий, ЧСС 80.",
+    ]
+    results = []
+    for text in texts:
+        result = verify_temp_and_blood_pressure(text)
+        results.append(
+            (
+                text,
+                "✅" if result.is_correspond else "❌",
+                result.temperature,
+                result.systole_pressure,
+                result.diastole_pressure,
+            )
+        )
+    print("RESULTS:")
+    print(
+        "| text | соответствует ли рекомендациям | температура | систолическое давление | диастолическое давление |"
+    )
+    for result in results:
+        print(result)

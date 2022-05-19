@@ -67,9 +67,11 @@ Also want deploy to Kubernetes
 
 ✅| Pytest, coverage
 
-⬜️| SPELLING CORRECTION
+✅| Spelling Correction
 
-⬜️| Create request simulator daemon that chaotic send HTTP-requests
+✅| Create request simulator daemon that chaotic send HTTP-requests
+
+⬜️| DB Schema: Clinics -> Patient -> Record -> Run
 
 ⬜️| DB Schema: Clinics -> Patient -> Record -> Run
 
@@ -110,3 +112,5 @@ Also want deploy to Kubernetes
 ✅| Drink some water
 
 ⬜️| Get NLP model metrics
+
+⬜️| [Фибрилляция и трепетание предсердий у взрослых (I48.0 I48.1 I48.2 I48.3 I48.4 I48.9)](https://cr.minzdrav.gov.ru/recomend/382_1)

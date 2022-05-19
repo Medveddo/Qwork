@@ -1,18 +1,17 @@
-from abc import ABC
 import os
+from abc import ABC
+from random import SystemRandom
 from time import sleep
 from typing import Callable, Dict, List
+
+import requests
+from dotenv import load_dotenv
 from faker import Faker
 from loguru import logger
-import requests
-from random import SystemRandom
-
-from dotenv import load_dotenv
 
 load_dotenv()
 
 API_URL = os.getenv("API_URL", "http://backend:8000")
-# API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 AVAILABLE_ENDPOINTS = [
     "stats",
