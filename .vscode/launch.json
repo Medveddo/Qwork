@@ -1,0 +1,34 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Uvicorn - App",
+            "cwd": "${workspaceFolder}/backend",
+            "type": "python",
+            "program": "${workspaceFolder}/backend/venv/bin/uvicorn",
+            "args": ["app.main:app"],
+            "request": "launch",
+            "envFile": "${workspaceFolder}/backend/.env",
+            "justMyCode": true
+        },
+        {
+            "name": "python -m app.nlp.services.anonymizer",
+            "cwd": "${workspaceFolder}/backend",
+            "type": "python",
+            "request": "launch",
+            "module": "app.nlp.services.anonymizer",
+            "justMyCode": true
+        },
+        {
+            "name": "python -m app.nlp.services.finder",
+            "cwd": "${workspaceFolder}/backend",
+            "type": "python",
+            "request": "launch",
+            "module": "app.nlp.services.finder",
+            "justMyCode": true
+        }
+    ]
+}
