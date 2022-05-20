@@ -9,17 +9,9 @@ from app.hashids import hashids_
 from . import models, schemas
 
 
-def get_history(
-    db: Session, count: int = 10, offset: int = 0
-) -> List[schemas.Run]:
+def get_history(db: Session, count: int = 10, offset: int = 0) -> List[schemas.Run]:
     logger.debug("Fetching all results from db")
-    results: list[models.Run] = (
-        db.query(models.Run)
-        .order_by(models.Run.id.desc())
-        .offset(offset)
-        .limit(count)
-        .all()
-    )
+    results: list[models.Run] = db.query(models.Run).order_by(models.Run.id.desc()).offset(offset).limit(count).all()
     logger.info(f"Got {len(results)} history runs")
     return [
         schemas.Run(
@@ -63,9 +55,7 @@ def create_patient(db: Session, patient: schemas.Patient) -> models.Patient:
 
 def get_runs_stat(db: Session) -> Tuple(int, float):
     total_runs = db.query(models.Run).count()
-    correspond_runs = (
-        db.query(models.Run).filter(models.Run.is_corresponding).count()
-    )
+    correspond_runs = db.query(models.Run).filter(models.Run.is_corresponding).count()
     if total_runs == 0:
         return (0, 0.0)
     return (total_runs, correspond_runs / total_runs)

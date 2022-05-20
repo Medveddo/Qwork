@@ -9,9 +9,7 @@ class LocalHashIds:
     HASHIDS_MIN_LENGTH = 16
 
     def __init__(self) -> None:
-        self.hashids = Hashids(
-            salt=self.HASHIDS_SALT, min_length=self.HASHIDS_MIN_LENGTH
-        )
+        self.hashids = Hashids(salt=self.HASHIDS_SALT, min_length=self.HASHIDS_MIN_LENGTH)
 
     def to_hash_id(self, id_: int) -> str:
         return self.hashids.encode(id_)

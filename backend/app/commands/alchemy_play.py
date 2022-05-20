@@ -84,9 +84,9 @@ db.delete(patient2)
 
 # Delete all runs
 
-db.query(Run).filter(
-    Run.id >= run2.id - 1  # because run rewrited with for loops (:
-).delete(synchronize_session="fetch")
+db.query(Run).filter(Run.id >= run2.id - 1).delete(  # because run rewrited with for loops (:
+    synchronize_session="fetch"
+)
 db.commit()
 
 # After interacting with database close the connection

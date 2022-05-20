@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -69,3 +69,8 @@ class Patient(BaseModel):
     id_: int
     full_name: str
     birthdate: datetime.datetime
+
+
+class FeaturesResult(BaseModel):
+    found_features: List[str]
+    missing_features: List[str]

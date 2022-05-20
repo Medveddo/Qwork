@@ -36,10 +36,7 @@ def get_text_to_process() -> Dict[str, str]:
 
         pressure_base = 60
         pressure = pressure_base + rnd.randint(0, 30)
-        text = (
-            f"Температура {temperature:.1f}."
-            f"Давление высокое - {pressure + 40} на {pressure}."
-        )
+        text = f"Температура {temperature:.1f}." f"Давление высокое - {pressure + 40} на {pressure}."
     else:
         text = faker.text(max_nb_chars=60)
 
@@ -77,9 +74,7 @@ class Simulator:
     def __init__(self, sleep_base: float = 2.0) -> None:
         history_endpoint = GetEndpoint("/history")
         stats_endpoint = GetEndpoint("/stats")
-        process_text_endpoint = PostEndpoint(
-            "/process_text", get_text_to_process
-        )
+        process_text_endpoint = PostEndpoint("/process_text", get_text_to_process)
 
         self.endpoints: List[Endpoint] = [
             history_endpoint,

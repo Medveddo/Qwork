@@ -1,10 +1,9 @@
 from typing import List
 
 import Levenshtein  # use as Levenshtein.distance('test', 'tesst')
-
-from app.nlp.entities import Feature, Keyword
-from natasha import Doc
 from natasha.doc import DocToken
+
+from app.nlp.entities import Keyword
 
 
 class LevenshteinProvider:
@@ -19,14 +18,9 @@ class LevenshteinProvider:
     def __init__(self) -> None:
         self.lev = Levenshtein
 
-    def is_keywords_in_token(
-        self, keywords: List[Keyword], token: DocToken
-    ) -> bool:
+    def is_keywords_in_token(self, keywords: List[Keyword], token: DocToken) -> bool:
         for keyword in keywords:
-            if (
-                self.lev.distance(token.text.lower(), keyword.keyword.lower())
-                <= keyword.levenshtein_tolerance
-            ):
+            if self.lev.distance(token.text.lower(), keyword.keyword.lower()) <= keyword.levenshtein_tolerance:
                 return True
 
         return False

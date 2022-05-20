@@ -14,11 +14,7 @@ load_dotenv()
 
 class EndpointFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
-        return (
-            record.args
-            and len(record.args) >= 3
-            and record.args[2] not in ("/metrics", "/health")
-        )
+        return record.args and len(record.args) >= 3 and record.args[2] not in ("/metrics", "/health")
 
 
 logging.getLogger("uvicorn.access").addFilter(EndpointFilter())

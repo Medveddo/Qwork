@@ -1,6 +1,8 @@
-from typing import List, Optional
+from typing import List
 
 from natasha import (
+    PER,
+    DatesExtractor,
     Doc,
     MorphVocab,
     NamesExtractor,
@@ -9,14 +11,11 @@ from natasha import (
     NewsNERTagger,
     NewsSyntaxParser,
     Segmenter,
-    DatesExtractor,
-    PER,
 )
+from natasha.doc import DocSpan
+from natasha.extractors import Match
 
 from app.nlp.entities.result import ExtractedMatchWithSpan
-
-from natasha.doc import DocSent, DocToken, DocSpan
-from natasha.extractors import Match
 
 
 class NatashaProvider:

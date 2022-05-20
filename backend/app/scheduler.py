@@ -21,9 +21,7 @@ def run_scheduler(args):
     # )
 
     try:
-        logger.info(
-            f"Starting APScheduler with {len(scheduler.get_jobs())} job"
-        )
+        logger.info(f"Starting APScheduler with {len(scheduler.get_jobs())} job")
         scheduler.start()
     except KeyboardInterrupt:
         logger.debug("Keyboard interrupt. Shutting down scheduler ...")

@@ -6,3 +6,4 @@ dev
 htmlcov
 node_modules
 venv
+.testmondata

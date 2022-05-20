@@ -1,15 +1,13 @@
 import datetime
+from random import SystemRandom
 from typing import Optional
 
-from faker import Faker
-from app.nlp.services import NatashaProvider
-
-from natasha import Doc
 import natasha
-
-from random import SystemRandom
+from faker import Faker
+from natasha import Doc
 
 from app.nlp.entities.result import ExtractedMatchWithSpan
+from app.nlp.services import NatashaProvider
 
 
 class Anonymizer:
@@ -107,9 +105,7 @@ class Anonymizer:
         match_stop = match_start + match.match.stop
 
         replaced_text = (
-            f"{text[:match_start + self.text_shift]}"
-            f"{new_name_str}"
-            f"{text[match_stop + self.text_shift:]}"
+            f"{text[:match_start + self.text_shift]}" f"{new_name_str}" f"{text[match_stop + self.text_shift:]}"
         )
 
         self.text_shift += len(new_name_str) - (match_stop - match_start)
@@ -124,11 +120,7 @@ class Anonymizer:
     ):
         date_str = new_date.strftime("%d.%m.%Y")
 
-        replaced_text = (
-            f"{text[:date.start + self.text_shift]}"
-            f"{date_str}"
-            f"{text[date.stop + self.text_shift:]}"
-        )
+        replaced_text = f"{text[:date.start + self.text_shift]}" f"{date_str}" f"{text[date.stop + self.text_shift:]}"
         self.text_shift += len(date_str) - (date.stop - date.start)
         return replaced_text
 
@@ -142,7 +134,7 @@ class Anonymizer:
 
 
 if __name__ == "__main__":
-    text1 = "Пациент Кондратьева Азарий Димитриевич. Дата рождения 20.12.1981. Всё хорошо. Благодарить надо Зуева Валентина Наумовна. Действие происходило в Городской Поликлинике №1 Новосибирска 28.10.1970."
+    text1 = "Пациент Кондратьева Азарий Димитриевич. Дата рождения 20.12.1981. Всё хорошо. Благодарить надо Зуева Валентина Наумовна. Действие происходило в Городской Поликлинике №1 Новосибирска 28.10.1970."  # noqa
     text2 = "Данилова Э.А. родилась 11 июля 1999. Поэтому 17 августа был устроен праздник."
     text3 = "Товарищ Иванов попросил закурить"
 
@@ -150,8 +142,6 @@ if __name__ == "__main__":
 
     print(
         anon.anonimyze(text1)
-    )  # Пациент Ширяева Жанна Юльевна. Дата рождения 25.07.2005. Всё хорошо. Благодарить надо Журавлева Хохлов Виктория. Действие происходило в Городской Поликлинике №1 Новосибирска 30.09.1991.
-    print(
-        anon.anonimyze(text2)
-    )  # Цветкова Е. Ф. родилась 13.02.2007. Поэтому 16.07.1989 был устроен праздник.
+    )  # Пациент Ширяева Жанна Юльевна. Дата рождения 25.07.2005. Всё хорошо. Благодарить надо Журавлева Хохлов Виктория. Действие происходило в Городской Поликлинике №1 Новосибирска 30.09.1991. # noqa
+    print(anon.anonimyze(text2))  # Цветкова Е. Ф. родилась 13.02.2007. Поэтому 16.07.1989 был устроен праздник.
     print(anon.anonimyze(text3))  # Товарищ Иван попросил закурить

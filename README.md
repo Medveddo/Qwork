@@ -114,3 +114,7 @@ Also want deploy to Kubernetes
 ⬜️| Get NLP model metrics
 
 ⬜️| [Фибрилляция и трепетание предсердий у взрослых (I48.0 I48.1 I48.2 I48.3 I48.4 I48.9)](https://cr.minzdrav.gov.ru/recomend/382_1)
+
+⬜️| [Try mongo](https://github.com/Youngestdev/fastapi-mongo)
+
+⬜️| pytest-testmon

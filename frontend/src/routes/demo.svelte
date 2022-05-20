@@ -8,7 +8,27 @@
 	const api_url = import.meta.env.VITE_API_URL;
 
 	const EXAMPLE_TEXT = 'Температура 37.9. Давление высокое - 120 на 80.';
-	const TEXT_TYPE_DEAFULT = 'Тип заболевания'
+	const EXAMPLE_TEXT2 = "Осмотр на фоне приема беталок зок 25 мг 1 р вечер  , панангин форте 1 /2 т, лозап + 1/2 т вечер, антикоагулянты не принимает  Состояние удовлетворительное.  Тоны сердца ослаблены , аритмичные, акцент 2 тона над легочной артерией. АД   120/70        мм рт ст ЧСС   75 в мин В легких дыхание везикулярное. Живот  при пальпации мягкий , безболезненный. Стул и диурез за ночь до 3 литров , со слов пациентки . Отеки нет  ЭКГ 21.12.17 - ритм фибрилляция предсердий с чсс 57-112   в  мин . Признаки НБПНПГ , ЭКГ 29.12.17 - ритм фибрилляция предсердий с чсс 70-120   в  мин . Признаки НБПНПГ ,  в БАК от 10.11.17 - мочевина 9,8 , креатинин ?,калий ?  в ОАК 10.11.17 анемия легкой степени ( эр 3,6 , Hb-115 г/л   ХМ ЭКГ 27.12.17 - ритм фибрилляция предсердий с чсс днем 57-89-39в мин , ночь -57-78-121 в мин . Зар-но 1297 ж.э. 3 эпизода Ж,Т от 3-до 15 комплексов . Макс RR- 2773 мсек( без отрицательной динамики в сравнении с ХМ ЭКГ от 2012 г";
+	const EXAMPLE_TEXT3 = "Состояние удовлетворительное.  РОСТ= 174см,   ВЕС=100 кг,  ИМТ=33,03.  Ожирение 1  ст.  Тоны сердца  приглушены  аритмичные, мерцательная аритмия  с  ЧСС=86   уд/мин.  АД= 127/103  мм.рт.ст.  В легких дыхание везикулярное,хрипов нет.  Живот   увеличен в обьеме  за счет п/к жирового слоя.  Отеков нет.  По ЭКГ фибрилляция предсердий с ЧСС=62-74уд. мин. Диффузные изменения миокарда.  Хс=   нет данных.  ХМ ЭКГ и заключение их НИИПК прилагаются."
+	const TEXT_EXAMPLES = [EXAMPLE_TEXT, EXAMPLE_TEXT2, EXAMPLE_TEXT3]
+	const EXAMPLES_LEN = TEXT_EXAMPLES.length
+
+	const TEXT_TYPE_DEAFULT = 'Тип заболевания';
+
+	const PROCESS_TYPES = {
+		'Острый коронарный синдром': 'acute_coronary_syndrome',
+		'Фибрилляция и трепетание предсердий': 'atrial_fibrilation_and_flutter',
+		'Универсальная обработка': 'all'
+	};
+
+	const _get_process_types_names = function () {
+		let result = [];
+		for (const [key, value] of Object.entries(PROCESS_TYPES)) {
+			console.log(key);
+			result.push(key);
+		}
+		return result;
+	};
 
 	// User input bindings
 	let user_input = '';
@@ -18,28 +38,59 @@
 	let is_active_error = false; // TODO: move to __layout as alert component with store usage
 	let error_message = '';
 
+	let result_;
+
 	function clearError() {
 		error_message = '';
 		is_active_error = false;
 	}
 
 	function setExampleText() {
-		user_input = EXAMPLE_TEXT;
+		let index = Math.floor(Math.random() * EXAMPLES_LEN)
+		user_input = TEXT_EXAMPLES[index];
 	}
 
-	const processText = async () => {
-	
+	const processTextInstant = async () => {
 		if (user_input === '') {
 			error_message = 'Текст для обработки не может быть пустым';
 			is_active_error = true;
-			return
+			return;
 		}
 
-		if (text_type_option === TEXT_TYPE_DEAFULT || text_type_option === '')
-		{
+		if (text_type_option === TEXT_TYPE_DEAFULT || text_type_option === '') {
 			error_message = 'Выберите тип заболевания';
 			is_active_error = true;
-			return
+			return;
+		}
+		is_loading = true;
+		const url = api_url + 'process_text_instant';
+		const res = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				text: user_input,
+				type: PROCESS_TYPES[text_type_option]
+			})
+		});
+		const data = await res.json();
+		console.log(data);
+		result_ = data;
+		is_loading = false;
+	};
+
+	const processText = async () => {
+		if (user_input === '') {
+			error_message = 'Текст для обработки не может быть пустым';
+			is_active_error = true;
+			return;
+		}
+
+		if (text_type_option === TEXT_TYPE_DEAFULT || text_type_option === '') {
+			error_message = 'Выберите тип заболевания';
+			is_active_error = true;
+			return;
 		}
 
 		is_loading = true;
@@ -68,15 +119,15 @@
 					'Content-Type': 'application/json'
 				}
 			});
-			response_status_code = result.status
+			response_status_code = result.status;
 			// console.log(requests_count, response_status_code)
 			const fetched_run_data = await result.json();
 			// console.log(fetched_run_data);
-			run_data = fetched_run_data
-			requests_count++
+			run_data = fetched_run_data;
+			requests_count++;
 		} while (response_status_code != 200 && requests_count < 10);
 
-		console.log(run_data)
+		console.log(run_data);
 		text_process_result.set(run_data);
 		is_loading = false;
 	};
@@ -127,7 +178,9 @@
 				<select class="select select-bordered" bind:value={text_type_option}>
 					<!-- https://svelte.dev/tutorial/select-bindings -->
 					<option disabled selected>Тип заболевания</option>
-					<option>Острокоронарный синдром ❤️</option>
+					{#each Object.entries(PROCESS_TYPES) as [key, value]}
+						<option>{key}</option>
+					{/each}
 				</select>
 			</div>
 		</div>
@@ -135,7 +188,7 @@
 			class="textarea textarea-primary my-2 max-w-screen"
 			bind:value={user_input}
 			placeholder={EXAMPLE_TEXT}
-			cols="40"
+			cols="80"
 			rows="5"
 		/>
 		<br />
@@ -145,11 +198,36 @@
 		{#if is_loading}
 			<button class="btn loading my-2">Обрабатываем</button>
 		{:else}
-			<button class="btn btn-secondary w-64 rounded-full my-2" on:click={processText}
+			<button class="btn btn-secondary w-64 rounded-full my-2" on:click={processTextInstant}
 				>Обработать и проверить</button
 			>
 		{/if}
 
 		<TextInfo />
+
+		<!-- New Green Red Results -->
+		{#if result_}
+			<div class="flex w-1/2">
+				<div class="grid h-max flex-grow card bg-green-200 rounded-box place-items-center">
+					<strong>Признаки найдены</strong>
+
+					<ol class="list-decimal">
+						{#each result_.found_features as found_feature}
+							<li>{found_feature}</li>
+						{/each}
+					</ol>
+				</div>
+				<div class="divider divider-horizontal" />
+				<div class="grid h-max flex-grow card bg-red-200 rounded-box place-items-center">
+					<strong>Признаки отсутствуют</strong>
+
+					<ol class="list-decimal">
+						{#each result_.missing_features as missing_feature}
+							<li>{missing_feature}</li>
+						{/each}
+					</ol>
+				</div>
+			</div>
+		{/if}
 	</div>
 </main>

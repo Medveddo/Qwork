@@ -1,8 +1,10 @@
 -r base.txt
 
 black
+coverage
 dramatiq[redis,watch]
 flake8
 isort
+pre-commit
 pytest
-coverage
+pytest-testmon
