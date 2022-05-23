@@ -5,13 +5,18 @@
 
 	import TextInfo from '../components/textInfo.svelte';
 
+	import FoundMissingFeatures from '../components/found_missing_features.svelte'
+import { missing_component } from 'svelte/internal';
+
 	const api_url = import.meta.env.VITE_API_URL;
 
 	const EXAMPLE_TEXT = 'Температура 37.9. Давление высокое - 120 на 80.';
-	const EXAMPLE_TEXT2 = "Осмотр на фоне приема беталок зок 25 мг 1 р вечер  , панангин форте 1 /2 т, лозап + 1/2 т вечер, антикоагулянты не принимает  Состояние удовлетворительное.  Тоны сердца ослаблены , аритмичные, акцент 2 тона над легочной артерией. АД   120/70        мм рт ст ЧСС   75 в мин В легких дыхание везикулярное. Живот  при пальпации мягкий , безболезненный. Стул и диурез за ночь до 3 литров , со слов пациентки . Отеки нет  ЭКГ 21.12.17 - ритм фибрилляция предсердий с чсс 57-112   в  мин . Признаки НБПНПГ , ЭКГ 29.12.17 - ритм фибрилляция предсердий с чсс 70-120   в  мин . Признаки НБПНПГ ,  в БАК от 10.11.17 - мочевина 9,8 , креатинин ?,калий ?  в ОАК 10.11.17 анемия легкой степени ( эр 3,6 , Hb-115 г/л   ХМ ЭКГ 27.12.17 - ритм фибрилляция предсердий с чсс днем 57-89-39в мин , ночь -57-78-121 в мин . Зар-но 1297 ж.э. 3 эпизода Ж,Т от 3-до 15 комплексов . Макс RR- 2773 мсек( без отрицательной динамики в сравнении с ХМ ЭКГ от 2012 г";
-	const EXAMPLE_TEXT3 = "Состояние удовлетворительное.  РОСТ= 174см,   ВЕС=100 кг,  ИМТ=33,03.  Ожирение 1  ст.  Тоны сердца  приглушены  аритмичные, мерцательная аритмия  с  ЧСС=86   уд/мин.  АД= 127/103  мм.рт.ст.  В легких дыхание везикулярное,хрипов нет.  Живот   увеличен в обьеме  за счет п/к жирового слоя.  Отеков нет.  По ЭКГ фибрилляция предсердий с ЧСС=62-74уд. мин. Диффузные изменения миокарда.  Хс=   нет данных.  ХМ ЭКГ и заключение их НИИПК прилагаются."
-	const TEXT_EXAMPLES = [EXAMPLE_TEXT, EXAMPLE_TEXT2, EXAMPLE_TEXT3]
-	const EXAMPLES_LEN = TEXT_EXAMPLES.length
+	const EXAMPLE_TEXT2 =
+		'Осмотр на фоне приема беталок зок 25 мг 1 р вечер  , панангин форте 1 /2 т, лозап + 1/2 т вечер, антикоагулянты не принимает  Состояние удовлетворительное.  Тоны сердца ослаблены , аритмичные, акцент 2 тона над легочной артерией. АД   120/70        мм рт ст ЧСС   75 в мин В легких дыхание везикулярное. Живот  при пальпации мягкий , безболезненный. Стул и диурез за ночь до 3 литров , со слов пациентки . Отеки нет  ЭКГ 21.12.17 - ритм фибрилляция предсердий с чсс 57-112   в  мин . Признаки НБПНПГ , ЭКГ 29.12.17 - ритм фибрилляция предсердий с чсс 70-120   в  мин . Признаки НБПНПГ ,  в БАК от 10.11.17 - мочевина 9,8 , креатинин ?,калий ?  в ОАК 10.11.17 анемия легкой степени ( эр 3,6 , Hb-115 г/л   ХМ ЭКГ 27.12.17 - ритм фибрилляция предсердий с чсс днем 57-89-39в мин , ночь -57-78-121 в мин . Зар-но 1297 ж.э. 3 эпизода Ж,Т от 3-до 15 комплексов . Макс RR- 2773 мсек( без отрицательной динамики в сравнении с ХМ ЭКГ от 2012 г';
+	const EXAMPLE_TEXT3 =
+		'Состояние удовлетворительное.  РОСТ= 174см,   ВЕС=100 кг,  ИМТ=33,03.  Ожирение 1  ст.  Тоны сердца  приглушены  аритмичные, мерцательная аритмия  с  ЧСС=86   уд/мин.  АД= 127/103  мм.рт.ст.  В легких дыхание везикулярное,хрипов нет.  Живот   увеличен в обьеме  за счет п/к жирового слоя.  Отеков нет.  По ЭКГ фибрилляция предсердий с ЧСС=62-74уд. мин. Диффузные изменения миокарда.  Хс=   нет данных.  ХМ ЭКГ и заключение их НИИПК прилагаются.';
+	const TEXT_EXAMPLES = [EXAMPLE_TEXT, EXAMPLE_TEXT2, EXAMPLE_TEXT3];
+	const EXAMPLES_LEN = TEXT_EXAMPLES.length;
 
 	const TEXT_TYPE_DEAFULT = 'Тип заболевания';
 
@@ -46,7 +51,7 @@
 	}
 
 	function setExampleText() {
-		let index = Math.floor(Math.random() * EXAMPLES_LEN)
+		let index = Math.floor(Math.random() * EXAMPLES_LEN);
 		user_input = TEXT_EXAMPLES[index];
 	}
 
@@ -184,13 +189,15 @@
 				</select>
 			</div>
 		</div>
-		<textarea
-			class="textarea textarea-primary my-2 max-w-screen"
-			bind:value={user_input}
-			placeholder={EXAMPLE_TEXT}
-			cols="80"
-			rows="5"
-		/>
+		<div class="textwrapper mx-2">
+			<textarea
+				class="textarea textarea-primary my-2"
+				bind:value={user_input}
+				placeholder={EXAMPLE_TEXT}
+				cols="80"
+				rows="5"
+			/>
+		</div>
 		<br />
 		<button class="btn btn-accent w-64 rounded-full" on:click={setExampleText}
 			>Вставить пример текста</button
@@ -207,27 +214,18 @@
 
 		<!-- New Green Red Results -->
 		{#if result_}
-			<div class="flex w-1/2">
-				<div class="grid h-max flex-grow card bg-green-200 rounded-box place-items-center">
-					<strong>Признаки найдены</strong>
-
-					<ol class="list-decimal">
-						{#each result_.found_features as found_feature}
-							<li>{found_feature}</li>
-						{/each}
-					</ol>
-				</div>
-				<div class="divider divider-horizontal" />
-				<div class="grid h-max flex-grow card bg-red-200 rounded-box place-items-center">
-					<strong>Признаки отсутствуют</strong>
-
-					<ol class="list-decimal">
-						{#each result_.missing_features as missing_feature}
-							<li>{missing_feature}</li>
-						{/each}
-					</ol>
-				</div>
-			</div>
+			<FoundMissingFeatures found_features={result_.found_features} missing_features={result_.missing_features} />
 		{/if}
 	</div>
 </main>
+
+<style>
+	textarea {
+		width: 100%;
+	}
+	.textwrapper {
+		border: 1px solid #999999;
+		margin: 5px 0;
+		padding: 3px;
+	}
+</style>

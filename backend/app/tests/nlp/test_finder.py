@@ -36,13 +36,29 @@ finder_test_cases = [
             ELECTROCARDIOGRAM_FEATURE,
             ATRIAL_FIBRILATION_FEATURE,
         ],
-    )
+    ),
+    FinderTestCase(
+        text="Состояние: удовлетворительное. Рост 180 см, вес 96 кг.ИМТ 29,63. В легких аускультативно везикулярное дыхание, хрипов нет. Тоны сердца умеренно приглушены, ритмичные, акцент 2 тона над аортой, ЧСС 86 в мин. АД 120/80 мм.рт.ст. Живот мягкий, печень +1 см из-под края реберной дуги. Незначительная пастозность голеней. ЭКГ: 01.08.2018 Ритм синусовый с ЧСС 74 в мин. ЭОС влево. Неполная AV блокада 1 ст. Тенденция к снижению вольтажа в стандартных отведениях. БАК сдал по месту жительства, результат в работе.",  # noqa
+        expected_features=[
+            HEIGHT_FEATURE,
+            WEIGHT_FEATURE,
+            BODY_MASS_INDEX_FEATURE,
+            HEART_RATE_FEATURE,
+            BLOOD_PRESSURE_FEATURE,
+            ELECTROCARDIOGRAM_FEATURE,
+            GENERAL_BLOOD_ANALYSIS_FEATURE,
+        ],
+    ),
 ]
 
 
 @pytest.mark.parametrize(
     argnames="test_case",
     argvalues=finder_test_cases,
+    ids=[
+        "finder_0",
+        "finder_1",
+    ],
 )
 def test_nlp_finder(test_case: FinderTestCase):
     finder = FeatureFidnder()

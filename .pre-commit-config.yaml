@@ -10,10 +10,11 @@ repos:
     hooks:
     -   id: black
         files: backend
+        exclude: backend/alembic
         args: ["--check"]
 -   repo: https://github.com/pycqa/flake8
     rev: '4.0.0'
     hooks:
     -   id: flake8
-        exclude: ^alembic
+        exclude: backend/alembic
         args: ["backend/", "--config", "backend/setup.cfg"]

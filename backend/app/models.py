@@ -1,8 +1,16 @@
-from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from .database import Base
+
+
+class RunNew(Base):
+    __tablename__ = "runs_new"
+
+    id = Column(Integer, primary_key=True, index=True)
+    text = Column(Text)
+    result = Column(JSON)
 
 
 class Run(Base):

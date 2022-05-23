@@ -74,3 +74,8 @@ class Patient(BaseModel):
 class FeaturesResult(BaseModel):
     found_features: List[str]
     missing_features: List[str]
+
+
+class RunNew(BaseModel):
+    text: str
+    result: FeaturesResult

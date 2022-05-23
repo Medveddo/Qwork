@@ -80,9 +80,11 @@ async def get_run(
     ),
 )
 async def process_text_instant(request: Request, input: schemas.TextInput, db: Session = Depends(get_db)):
-
-    logger.debug(f"Input text: {input}")
-    return controller_service.process_text_with_related_clinrecs(input)
+    logger.debug(f"process_text_instant - input: {input}")
+    result = controller_service.process_text_with_related_clinrecs(input)
+    logger.debug(f"process_text_instant - output: {result}")
+    crud.save_text_and_find_result(db, input.text, result)
+    return result
 
 
 @endpoints_router.post(
@@ -123,25 +125,25 @@ async def process_text(
     "/history",
     tags=["Text process"],
     summary="Get runs history",
-    response_model=list[schemas.Run],
-    responses={
-        200: {
-            "content": {
-                "application/json": {
-                    "example": [
-                        {
-                            "text": "Температура 37.9. Давление высокое - 120 на 80.",  # noqa
-                            "is_correspond": True,
-                            "temperature": 37.9,
-                            "systole_pressure": 120,
-                            "diastole_pressure": 80,
-                            "run_id": "095zpx3ZdYMLwGkZ",
-                        }
-                    ]
-                }
-            },
-        }
-    },
+    # response_model=list[schemas.Run],
+    # responses={
+    #     200: {
+    #         "content": {
+    #             "application/json": {
+    #                 "example": [
+    #                     {
+    #                         "text": "Температура 37.9. Давление высокое - 120 на 80.",  # noqa
+    #                         "is_correspond": True,
+    #                         "temperature": 37.9,
+    #                         "systole_pressure": 120,
+    #                         "diastole_pressure": 80,
+    #                         "run_id": "095zpx3ZdYMLwGkZ",
+    #                     }
+    #                 ]
+    #             }
+    #         },
+    #     }
+    # },
 )
 def read_history(
     request: Request,
@@ -149,7 +151,7 @@ def read_history(
     offset: int = 0,
     db: Session = Depends(get_db),
 ):
-    results = crud.get_history(db, count, offset)
+    results = crud.get_new_runs_history(db, count, offset)
     logger.debug(f"{results=}")
     return results
 

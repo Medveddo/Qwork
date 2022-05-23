@@ -4,23 +4,8 @@ from pydantic import BaseModel
 
 
 class Keyword(BaseModel):
-    # class Type(Enum):
-    #     SINGLE = 0
-    #     MULTIWORD = 1
-
     keyword: str
     levenshtein_tolerance: Optional[int] = None
-    # type: Optional[Type] = None
-
-    # def __init__(
-    #     self,
-    #     keyword: str,
-    # ) -> None:
-    #     self.type: self.Type = (
-    #         self.Type.SINGLE
-    #         if len(keyword.strip().split()) == 1
-    #         else self.Type.MULTIWORD
-    #     )
 
 
 class Feature(BaseModel):
@@ -40,7 +25,7 @@ class Feature(BaseModel):
     description: str
     key: str
     keywords: List[Keyword]
-    # TODO banlist, e.g. "уд" для Артериального давления АД
+    banlist: List[Keyword] = []
 
     def __hash__(self) -> int:
         return hash(self.key)
@@ -52,6 +37,7 @@ HEART_RATE_FEATURE = Feature(
     keywords=[
         Keyword(keyword="чсс", levenshtein_tolerance=1),
     ],
+    banlist=[Keyword(keyword="чжс")],
 )
 
 BLOOD_PRESSURE_FEATURE = Feature(
@@ -64,6 +50,7 @@ BLOOD_PRESSURE_FEATURE = Feature(
         Keyword(keyword="давл"),
         Keyword(keyword="артериальный давление"),
     ],
+    banlist=[Keyword(keyword="уд")],
 )
 
 TEMPERATURE_FEATURE = Feature(
@@ -95,6 +82,7 @@ GENERAL_BLOOD_ANALYSIS_FEATURE = Feature(
     description="Общий анализ крови",
     key="general_blood_analysis",
     keywords=[Keyword(keyword="оак", levenshtein_tolerance=1)],
+    # banlist=[Keyword(keyword="бак")]
 )
 
 WEIGHT_FEATURE = Feature(description="Вес", key="weight", keywords=[Keyword(keyword="вес")])

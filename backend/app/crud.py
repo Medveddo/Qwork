@@ -1,5 +1,5 @@
-from ast import Tuple
-from typing import List
+import json
+from typing import List, Tuple
 
 from loguru import logger
 from sqlalchemy.orm import Session
@@ -53,12 +53,23 @@ def create_patient(db: Session, patient: schemas.Patient) -> models.Patient:
     return db_patient
 
 
-def get_runs_stat(db: Session) -> Tuple(int, float):
-    total_runs = db.query(models.Run).count()
-    correspond_runs = db.query(models.Run).filter(models.Run.is_corresponding).count()
-    if total_runs == 0:
+def get_runs_stat(db: Session) -> Tuple[int, float]:
+    runs = db.query(models.RunNew).all()
+
+    total_runs_count = len(runs)
+
+    runs: List[schemas.RunNew] = [
+        schemas.RunNew(text=run.text, result=schemas.FeaturesResult.parse_obj(json.loads(run.result))) for run in runs
+    ]
+
+    run_ratios = [
+        len(run.result.found_features) / (len(run.result.found_features) + len(run.result.missing_features))
+        for run in runs
+    ]
+    logger.debug(run_ratios)
+    if total_runs_count == 0:
         return (0, 0.0)
-    return (total_runs, correspond_runs / total_runs)
+    return (total_runs_count, sum(run_ratios) / total_runs_count)
 
 
 def get_run(db: Session, run_id: int) -> schemas.Run:
@@ -95,3 +106,26 @@ def update_run(db: Session, run_id: int, result: schemas.Run) -> models.Run:
     db.commit()
     db.refresh(db_run)
     return db_run
+
+
+def save_text_and_find_result(db: Session, text: str, result: schemas.FeaturesResult) -> models.RunNew:
+    db_run = models.RunNew(text=text, result=result.json())
+    db.add(db_run)
+    db.commit()
+    db.refresh(db_run)
+    return db_run
+
+
+def get_new_runs_history(db: Session, count: int = 10, offset: int = 0) -> List[schemas.RunNew]:
+    results: list[models.RunNew] = (
+        db.query(models.RunNew).order_by(models.RunNew.id.desc()).offset(offset).limit(count).all()
+    )
+    logger.debug(type(results[0].result))
+    logger.debug(results[0].result)
+    return [
+        schemas.RunNew(
+            text=result.text,
+            result=schemas.FeaturesResult.parse_obj(json.loads(result.result)),
+        )
+        for result in results
+    ]

@@ -4,7 +4,6 @@ from natasha import Doc
 from natasha.doc import DocSent, DocToken
 
 from app.nlp.entities import ClinicalRecomindations, Feature, FeatureFindResult
-from app.nlp.entities.clinrec import ATRIAL_FIBRILATION_AND_FLUTTER_CLINICAL_RECOMENDATIONS
 from app.nlp.entities.result import FoundMissingFeatures
 from app.nlp.services import LevenshteinProvider, NatashaProvider
 
@@ -48,24 +47,22 @@ class FeatureFidnder:
         for result in results:
             print(result.feature.description, "-", result.sentence.text)
 
-        print("Missing features:")
+        found_feature_keywords = set([result.feature.key for result in results])
 
-        missing_features: List[Feature] = set(looking_features) - set(
-            [
-                Feature(
-                    description=r.feature.description,
-                    key=r.feature.key,
-                    keywords=r.feature.keywords,
-                )
-                for r in results
-            ]
-        )
+        print("Missing features:")
+        missing_features: List[Feature] = [
+            feature for feature in clinrec.features if feature.key not in found_feature_keywords
+        ]
+
         for feature in missing_features:
             print(feature.description)
 
         return FoundMissingFeatures(features_found=results, features_missing=missing_features)
 
     def _feature_in_token(self, feature: Feature, token: DocToken) -> bool:
+        if self._token_is_in_banlist(feature, token):
+            return False
+
         plain_keywords = [keyword.keyword for keyword in feature.keywords]
         if (token.lemma in plain_keywords) or (token.text.lower() in plain_keywords):
             return True
@@ -76,10 +73,16 @@ class FeatureFidnder:
 
         return False
 
+    def _token_is_in_banlist(self, feature: Feature, token: DocToken) -> bool:
+        if not feature.banlist:
+            return False
+
+        banned_keywords = [keyword.keyword for keyword in feature.banlist]
+        if banned_keywords:
+            if token.lemma in banned_keywords:
+                return True
+            if token.text in banned_keywords:
+                return True
+
 
 FINDER = FeatureFidnder()
-
-if __name__ == "__main__":
-    TEXT = "Состояние: удовлетворительное. Рост 180 см, вес 96 кг.ИМТ 29,63. В легких аускультативно везикулярное дыхание, хрипов нет. Тоны сердца умеренно приглушены, ритмичные, акцент 2 тона над аортой, ЧСС 86 в мин. АД 120/80 мм.рт.ст. Живот мягкий, печень +1 см из-под края реберной дуги. Незначительная пастозность голеней. ЭКГ: 01.08.2018 Ритм синусовый с ЧСС 74 в мин. ЭОС влево. Неполная AV блокада 1 ст. Тенденция к снижению вольтажа в стандартных отведениях. БАК сдал по месту жительства, результат в работе."  # noqa
-
-    FINDER.find_features(TEXT, ATRIAL_FIBRILATION_AND_FLUTTER_CLINICAL_RECOMENDATIONS)
