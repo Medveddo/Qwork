@@ -3,3 +3,5 @@ __pycache__
 dev
 htmlcov
 venv
+*.xlsx
+*.csv
