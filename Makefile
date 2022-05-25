@@ -19,7 +19,7 @@ test:
 	bash -c "cd backend && venv/bin/pytest"
 
 testall:
-	bash -c "cd backend && venv/bin/coverage run -m pytest --no-testmon && venv/bin/coverage report"
+	bash -c "cd backend && venv/bin/coverage run -m pytest --no-testmon && venv/bin/coverage report && venv/bin/coverage html"
 
 drama:
 	bash -c "cd backend && venv/bin/dramatiq app.dramatiq:DRAMATIQ_BROKER app.tasks -t 1 -p 1 --watch app"
@@ -41,3 +41,8 @@ simulate:
 
 nlp:
 	bash -c "cd backend && venv/bin/python app/nlp.py"
+
+lint:
+	bash -c "cd backend && venv/bin/isort ."
+	bash -c "cd backend && venv/bin/black ."
+	bash -c "cd backend && venv/bin/flake8"

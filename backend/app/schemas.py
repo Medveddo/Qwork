@@ -72,10 +72,13 @@ class Patient(BaseModel):
 
 
 class FeaturesResult(BaseModel):
-    found_features: List[str]
-    missing_features: List[str]
+    found_features: Optional[List[str]] = []
+    missing_features: Optional[List[str]] = []
 
 
 class RunNew(BaseModel):
     text: str
+    type: Optional[str]
     result: FeaturesResult
+    finished: bool
+    run_id: Optional[str] = None

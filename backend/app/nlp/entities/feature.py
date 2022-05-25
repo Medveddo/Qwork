@@ -45,6 +45,7 @@ BLOOD_PRESSURE_FEATURE = Feature(
     key="blood_pressure",
     keywords=[
         Keyword(keyword="давление"),
+        Keyword(keyword=r"а\д"),
         Keyword(keyword="ад", levenshtein_tolerance=1),
         Keyword(keyword="артериальный"),
         Keyword(keyword="давл"),

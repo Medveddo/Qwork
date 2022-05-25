@@ -9,7 +9,9 @@
             "cwd": "${workspaceFolder}/backend",
             "type": "python",
             "program": "${workspaceFolder}/backend/venv/bin/uvicorn",
-            "args": ["app.main:app"],
+            "args": [
+                "app.main:app"
+            ],
             "request": "launch",
             "envFile": "${workspaceFolder}/backend/.env",
             "justMyCode": true
@@ -29,6 +31,18 @@
             "request": "launch",
             "module": "app.nlp.services.finder",
             "justMyCode": true
+        },
+        {
+            "name": "Debug tests",
+            "type": "python",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/backend/",
+            "program": "${workspaceFolder}/backend/venv/bin/pytest",
+            "justMyCode": true,
+            "env": {
+                "_PYTEST_RAISE": "1"
+            },
         }
     ]
 }

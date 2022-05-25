@@ -7,4 +7,5 @@ flake8
 isort
 pre-commit
 pytest
+pytest-env
 pytest-testmon

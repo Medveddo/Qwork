@@ -26,7 +26,7 @@ app = FastAPI(
         "data from text and checking text corresonding "
         "to clinical recomendations "
     ),
-    version="0.1.2",
+    version="0.2.0",
     contact={
         "name": "Sizikov Vitaly",
         "url": "https://vk.com/vitaliksiz",

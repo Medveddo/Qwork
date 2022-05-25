@@ -1,5 +1,5 @@
 import json
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from loguru import logger
 from sqlalchemy.orm import Session
@@ -59,7 +59,15 @@ def get_runs_stat(db: Session) -> Tuple[int, float]:
     total_runs_count = len(runs)
 
     runs: List[schemas.RunNew] = [
-        schemas.RunNew(text=run.text, result=schemas.FeaturesResult.parse_obj(json.loads(run.result))) for run in runs
+        schemas.RunNew(
+            text=run.text,
+            result=schemas.FeaturesResult.parse_obj(json.loads(run.result))
+            if isinstance(run.result, str)
+            else schemas.FeaturesResult.parse_obj(run.result),
+            type=run.type,
+            finished=run.finished,
+        )
+        for run in runs
     ]
 
     run_ratios = [
@@ -72,17 +80,21 @@ def get_runs_stat(db: Session) -> Tuple[int, float]:
     return (total_runs_count, sum(run_ratios) / total_runs_count)
 
 
-def get_run(db: Session, run_id: int) -> schemas.Run:
-    db_run = db.query(models.Run).get(run_id)
-    logger.debug(db_run.updated_at)
-    return schemas.Run(
+def get_run(db: Session, run_id: int) -> Optional[schemas.Run]:
+    db_run = db.query(models.RunNew).get(run_id)
+    if not db_run:
+        return None
+    logger.debug(repr(db_run.result))
+    result = (
+        schemas.FeaturesResult.parse_obj(json.loads(db_run.result))
+        if isinstance(db_run.result, str)
+        else schemas.FeaturesResult.parse_obj(db_run.result)
+    )
+    return schemas.RunNew(
         text=db_run.text,
-        is_corresponding=db_run.is_corresponding,
-        temperature=db_run.temperature,
-        systole_pressure=db_run.systole_pressure,
-        diastole_pressure=db_run.diastole_pressure,
-        finished=db_run.finished,
         type=db_run.type,
+        result=result,
+        finished=db_run.finished,
         run_id=hashids_.to_hash_id(db_run.id),
     )
 
@@ -95,13 +107,18 @@ def create_run(db: Session, input: schemas.TextInput) -> models.Run:
     return db_run
 
 
-def update_run(db: Session, run_id: int, result: schemas.Run) -> models.Run:
-    db_run: models.Run = db.query(models.Run).get(run_id)
-    db_run.is_corresponding = result.is_corresponding
-    db_run.temperature = result.temperature
-    db_run.systole_pressure = result.systole_pressure
-    db_run.diastole_pressure = result.diastole_pressure
-    db_run.finished = result.finished
+def create_run_new(db: Session, input: schemas.TextInput) -> models.RunNew:
+    db_run = models.RunNew(text=input.text, type=input.type)
+    db.add(db_run)
+    db.commit()
+    db.refresh(db_run)
+    return db_run
+
+
+def update_run_result(db: Session, run_id: int, result: schemas.FeaturesResult) -> models.Run:
+    db_run: models.RunNew = db.query(models.RunNew).get(run_id)
+    db_run.result = result.json()
+    db_run.finished = True
     db.add(db_run)
     db.commit()
     db.refresh(db_run)
@@ -120,12 +137,15 @@ def get_new_runs_history(db: Session, count: int = 10, offset: int = 0) -> List[
     results: list[models.RunNew] = (
         db.query(models.RunNew).order_by(models.RunNew.id.desc()).offset(offset).limit(count).all()
     )
-    logger.debug(type(results[0].result))
-    logger.debug(results[0].result)
     return [
         schemas.RunNew(
             text=result.text,
-            result=schemas.FeaturesResult.parse_obj(json.loads(result.result)),
+            result=schemas.FeaturesResult.parse_obj(json.loads(result.result))
+            if isinstance(result.result, str)
+            else schemas.FeaturesResult.parse_obj(result.result),
+            type=result.type,
+            finished=result.finished,
+            run_id=hashids_.to_hash_id(result.id),
         )
         for result in results
     ]

@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text, JSON
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -10,7 +10,9 @@ class RunNew(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     text = Column(Text)
-    result = Column(JSON)
+    type = Column(String(length=30))
+    result = Column(JSON, default={})
+    finished = Column(Boolean, default=False)
 
 
 class Run(Base):
