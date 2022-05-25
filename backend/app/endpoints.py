@@ -9,6 +9,7 @@ import app.tasks as tasks
 from app import crud, schemas
 from app.database import get_db
 from app.hashids import hashids_
+from app.nlp.services.anonymizer import Anonymizer
 from app.nlp.services.controller import controller_service
 from app.utils import health_check_app
 
@@ -111,13 +112,14 @@ async def get_run(
     ),
     response_model=schemas.FeaturesResult,
 )
-async def process_text_instant(request: Request, input: schemas.TextInput, db: Session = Depends(get_db)):
-    logger.debug(f"process_text_instant - input: {input}")
-    run = crud.create_run_new(db, input)
-    result = controller_service.process_text_with_related_clinrecs(input)
+async def process_text_instant(request: Request, input_: schemas.TextInput, db: Session = Depends(get_db)):
+    logger.debug(f"{input_=}")
+    input_.text = Anonymizer().anonimyze(input_.text)
+    logger.debug(f"process_text_instant - input: {input_}")
+    run = crud.create_run_new(db, input_)
+    result = controller_service.process_text_with_related_clinrecs(input_)
     logger.debug(f"process_text_instant - output: {result}")
     crud.update_run_result(db, run.id, result)
-    # crud.save_text_and_find_result(db, input.text, result)
     return result
 
 

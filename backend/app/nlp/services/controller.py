@@ -1,7 +1,6 @@
 from loguru import logger
 
 from app.nlp.entities.clinrec import TYPE_TO_CLINREC_MAPPING, ClinicalRecomindations
-from app.nlp.services.anonymizer import Anonymizer
 from app.nlp.services.finder import FINDER
 from app.schemas import FeaturesResult, TextInput
 
@@ -23,8 +22,6 @@ class Controller:
         self.finder = FINDER
 
     def process_text_with_related_clinrecs(self, input_: TextInput) -> FeaturesResult:
-        logger.debug(f"{input_=}")
-        input_.text = Anonymizer().anonimyze(input_.text)
         logger.debug(f"{input_=}")
 
         clinrecs = self._get_clinrec_by_type(input_.type)
