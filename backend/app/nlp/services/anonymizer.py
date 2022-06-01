@@ -30,14 +30,14 @@ class Anonymizer:
     def _anonimyze_names(self) -> None:
         names_with_spans = self.nat.extract_names(self.doc)
         for match in names_with_spans:
-            self.text = self._replace_name(self.text, match, self._random_name())
+            self.text = self._short_name(self.text, match, match.match.fact)
 
         self._reset_text_shift()
 
     def _anonimyze_dates(self) -> None:
         dates = self.nat.extract_dates(self.text)
         for date in dates:
-            self.text = self._replace_date(self.text, date, self._random_date())
+            self.text = self._short_date(self.text, date, self._random_date())
 
         self._reset_text_shift()
 
@@ -74,6 +74,64 @@ class Anonymizer:
     def _random_date(self) -> str:
         date: datetime.date = self.faker.date_between(start_date="-100y")
         return date
+
+    def _short_name(
+        self,
+        text: str,
+        match: ExtractedMatchWithSpan,
+        name: natasha.extractors.obj.Name,
+    ) -> str:
+        old_name = match.match.fact
+        name_str = ""
+
+        if old_name.last:
+            name_str += name.last[0]
+
+        if old_name.first:
+            name_str += name.first[0]
+
+        if old_name.middle:
+            name_str += name.middle[0]
+
+        name_str = name_str.strip()
+
+        match_start = match.span.start + match.match.start
+        match_stop = match_start + match.match.stop
+
+        replaced_text = f"{text[:match_start + self.text_shift]}" f"{name_str}" f"{text[match_stop + self.text_shift:]}"
+
+        self.text_shift += len(name_str) - (match_stop - match_start)
+
+        return replaced_text
+
+    def _short_date(
+        self,
+        text: str,
+        date: natasha.extractors.Match,
+        new_date: datetime.date,
+    ) -> str:
+        date_str = new_date.strftime("%d.%m.%Y")
+        if date.fact.year:
+            replaced_text = (
+                f"{text[:date.start + self.text_shift]}" f"{date.fact.year}" f"{text[date.stop + self.text_shift:]}"
+            )
+            self.text_shift += len(str(date.fact.year)) - (date.stop - date.start)
+        elif date.fact.month:
+            replaced_text = (
+                f"{text[:date.start + self.text_shift]}" f"{date.fact.month}" f"{text[date.stop + self.text_shift:]}"
+            )
+            self.text_shift += len(str(date.fact.month)) - (date.stop - date.start)
+        elif date.fact.day:
+            replaced_text = (
+                f"{text[:date.start + self.text_shift]}" f"{date.fact.day}" f"{text[date.stop + self.text_shift:]}"
+            )
+            self.text_shift += len(str(date.fact.day)) - (date.stop - date.start)
+        else:
+            replaced_text = (
+                f"{text[:date.start + self.text_shift]}" f"{date_str}" f"{text[date.stop + self.text_shift:]}"
+            )
+            self.text_shift += len(date_str) - (date.stop - date.start)
+        return replaced_text
 
     def _replace_name(
         self,
@@ -120,7 +178,7 @@ class Anonymizer:
         text: str,
         date: natasha.extractors.Match,
         new_date: datetime.date,
-    ):
+    ) -> str:
         date_str = new_date.strftime("%d.%m.%Y")
 
         replaced_text = f"{text[:date.start + self.text_shift]}" f"{date_str}" f"{text[date.stop + self.text_shift:]}"

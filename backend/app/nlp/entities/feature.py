@@ -9,19 +9,6 @@ class Keyword(BaseModel):
 
 
 class Feature(BaseModel):
-    """
-    Feature that need to be extracted from text
-
-    :keywords should be lowercase
-
-    Examples
-    --------
-    f = Feature(["чсс"], 1)
-
-    Means that "чжс", also must return True when finding
-    this feature in text using levenshtein distance
-    """
-
     description: str
     key: str
     keywords: List[Keyword]
