@@ -1,6 +1,7 @@
 import datetime
 from typing import List
 
+from dramatiq.results.errors import ResultTimeout
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from loguru import logger
 from sqlalchemy.orm import Session
@@ -42,14 +43,22 @@ async def stats(db: Session = Depends(get_db)):
     "/health",
     summary="Enpoint for checking if API is available",
     tags=["Service enpoints"],
+    responses={
+        200: {
+            "content": {"application/json": {"example": {"status": "OK"}}},
+        },
+        503: {
+            "content": {"application/json": {"example": {"status": "unhealthy"}}},
+        },
+    },
 )
 async def health(response: Response):
     app_healthy = await health_check_app()
     if not app_healthy:
-        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-        return False
+        response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+        return {"status": "unhealthy"}
 
-    return True
+    return {"status": "OK"}
 
 
 @endpoints_router.get(
@@ -72,6 +81,42 @@ async def now(request: Request):
     "/run/{hashid}",
     tags=["Text process"],
     summary="Get text processing result",
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "text": "Температура 37.9. Давление высокое - 120 на 80.",
+                        "type": "all",
+                        "result": {
+                            "found_features": ["Температура", "Артериальное давление"],
+                            "missing_features": [
+                                "Частота сердечных сокращений",
+                                "Электрокардиограмма (ЭКГ)",
+                                "Фибрилляция пердсердий",
+                                "Общий анализ крови",
+                                "Вес",
+                                "Рост",
+                                "Индекс массы тела",
+                            ],
+                        },
+                        "finished": True,
+                        "run_id": "095zpx3ZdYMLwGkZ",
+                    }
+                }
+            },
+        },
+        202: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "finished": False,
+                        "run_id": "095zpx3ZdYMLwGkZ",
+                    }
+                }
+            },
+        },
+    },
 )
 async def get_run(
     request: Request,
@@ -103,14 +148,33 @@ async def get_run(
 @endpoints_router.post(
     "/process_text_instant",
     tags=["Text process"],
-    summary="Instattly returns the result of finding features",
+    summary="Instantly returns the result of finding features",
     description=(
-        "Instattly returns the result of finding features corresponding to :type in :text"
+        "Instantly returns the result of finding features corresponding to :type in :text "
         "Request-response endpoint with pending connection. "
         "Recomended to use '/process_text' enpoint that returns run_id "
         "then result can be retrieved at '/run_result/<run_id>'"
     ),
     response_model=schemas.FeaturesResult,
+    responses={
+        200: {
+            "content": {
+                "application/json": {
+                    "example": {
+                        "found_features": ["Артериальное давление", "Индекс массы тела", "Температура"],
+                        "missing_features": [
+                            "Частота сердечных сокращений",
+                            "Электрокардиограмма (ЭКГ)",
+                            "Фибрилляция пердсердий",
+                            "Общий анализ крови",
+                            "Вес",
+                            "Рост",
+                        ],
+                    }
+                },
+            }
+        },
+    },
 )
 async def process_text_instant(request: Request, input_: schemas.TextInput, db: Session = Depends(get_db)):
     logger.debug(f"{input_=}")
@@ -132,7 +196,7 @@ async def process_text_instant(request: Request, input_: schemas.TextInput, db: 
     ),
     response_model=schemas.ResponseWithRunId,
     responses={
-        200: {
+        202: {
             "content": {
                 "application/json": {
                     "example": {
@@ -186,7 +250,7 @@ async def process_text(
                                 ],
                             },
                             "finished": True,
-                            "run_id": None,
+                            "run_id": "dwgklAyXejYxPQ9b",
                         }
                     ]
                 }
@@ -215,9 +279,17 @@ def read_history(
                 "application/json": {"example": "2022-05-23 15:31:26.838184 I'm fine!"},
             }
         },
+        503: {
+            "content": {
+                "application/json": {"example": {"detail": "Dramatiq does not respond in time"}},
+            }
+        },
     },
 )
 def dramatiq(request: Request):
     tasks.say_something()
     message = tasks.say_something.send()
-    return message.get_result(block=True)
+    try:
+        return message.get_result(block=True)
+    except ResultTimeout:
+        raise HTTPException(status_code=503, detail="Dramatiq does not respond in time")

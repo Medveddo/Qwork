@@ -11,8 +11,8 @@ class TextInput(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "text": "Температура 37.9. Давление высокое - 120 на 80.",
-                "type": "acute_coronary_syndrome",
+                "text": "Температура 37.9. Давление высокое - 120 на 80. ИМТ 38.09.",
+                "type": "all",
             }
         }
 

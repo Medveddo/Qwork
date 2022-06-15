@@ -83,6 +83,23 @@ BODY_MASS_INDEX_FEATURE = Feature(
     keywords=[Keyword(keyword="имт", levenshtein_tolerance=1)],
 )
 
+CARDIAC_TROPONIN_FEATURE = Feature(
+    description="Уровень сердечных тропонинов",
+    key="cardiac_troponin",
+    keywords=[
+        Keyword(keyword="тропонин"),
+        Keyword(keyword="тропонины"),
+    ],
+)
+
+CHOLESTEROL_FEATURE = Feature(
+    description="Уровень холестерина",
+    key="cholesterol",
+    keywords=[
+        Keyword(keyword="холестерин"),
+    ],
+)
+
 BASIC_FEATURES_LIST = [
     HEART_RATE_FEATURE,
     BLOOD_PRESSURE_FEATURE,
@@ -93,4 +110,6 @@ BASIC_FEATURES_LIST = [
     WEIGHT_FEATURE,
     HEIGHT_FEATURE,
     BODY_MASS_INDEX_FEATURE,
+    CARDIAC_TROPONIN_FEATURE,
+    CHOLESTEROL_FEATURE,
 ]
